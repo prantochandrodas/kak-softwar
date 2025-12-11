@@ -141,35 +141,38 @@
                     class="btn btn-sm fw-bold btn-success">{{ __('messages.make_purchase') }}</a>
                 <!--end::Primary button-->
             </div>
-            <table id="featuredProjectTitleHeading" class="display" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>{{ __('messages.serial_no') }}</th>
-                        @if ($isSuperAdmin && !$sessionBranch)
-                            <th>{{ __('messages.branch') }}</th>
-                        @endif
-                        <th>{{ __('messages.date') }}</th>
-                        <th>{{ __('messages.invoice_no') }}</th>
-                        <th>{{ __('messages.supplier') }}</th>
-                        <th>{{ __('messages.total_amount') }}</th>
-                        <th>{{ __('messages.paid_amount') }}</th>
-                        <th>{{ __('messages.due_amount') }}</th>
-                        <th>{{ __('messages.status') }}</th>
-                        <th>{{ __('messages.action') }}</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <th colspan="@if ($isSuperAdmin && !$sessionBranch) 4 @else 3 @endif" style="text-align:right">
-                            {{ __('messages.total') }}:
-                        </th>
-                        <th></th> <!-- total_amount will show here -->
-                        <th></th> <!-- paid_amount will show here -->
-                        <th></th> <!-- due_amount will show here -->
-                        <th colspan="1"></th> <!-- for status and action columns -->
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="table-responsive">
+                <table id="featuredProjectTitleHeading" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>{{ __('messages.serial_no') }}</th>
+                            @if ($isSuperAdmin && !$sessionBranch)
+                                <th>{{ __('messages.branch') }}</th>
+                            @endif
+                            <th>{{ __('messages.date') }}</th>
+                            <th>{{ __('messages.invoice_no') }}</th>
+                            <th>{{ __('messages.supplier') }}</th>
+                            <th>{{ __('messages.selected_currency_total_amount') }}</th>
+                            <th>{{ __('messages.total_amount') }}</th>
+                            <th>{{ __('messages.paid_amount') }}</th>
+                            <th>{{ __('messages.due_amount') }}</th>
+                            <th>{{ __('messages.status') }}</th>
+                            <th>{{ __('messages.action') }}</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th colspan="@if ($isSuperAdmin && !$sessionBranch) 5 @else 4 @endif" style="text-align:right">
+                                {{ __('messages.total') }}:
+                            </th>
+                            <th></th> <!-- total_amount will show here -->
+                            <th></th> <!-- paid_amount will show here -->
+                            <th></th> <!-- due_amount will show here -->
+                            <th colspan="1"></th> <!-- for status and action columns -->
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -192,6 +195,35 @@
     </div>
 </div>
 @endsection
+<style>
+#featuredProjectTitleHeading th:nth-child(6),
+#featuredProjectTitleHeading td:nth-child(6) {
+    width: 120px;
+    white-space: nowrap;
+    /* amount এবং symbol এক লাইনে রাখার জন্য */
+}
+
+#featuredProjectTitleHeading th:nth-child(7),
+#featuredProjectTitleHeading td:nth-child(7) {
+    width: 120px;
+    white-space: nowrap;
+    /* amount এবং symbol এক লাইনে রাখার জন্য */
+}
+
+#featuredProjectTitleHeading th:nth-child(9),
+#featuredProjectTitleHeading td:nth-child(9) {
+    width: 120px;
+    white-space: nowrap;
+    /* amount এবং symbol এক লাইনে রাখার জন্য */
+}
+
+#featuredProjectTitleHeading th:nth-child(8),
+#featuredProjectTitleHeading td:nth-child(8) {
+    width: 120px;
+    white-space: nowrap;
+    /* amount এবং symbol এক লাইনে রাখার জন্য */
+}
+</style>
 @push('script')
 <!-- Include jQuery and DataTables with Bootstrap -->
 <script src="{{ asset('assets/backend/js/jquery-3.6.0.min.js') }}"></script>
@@ -241,11 +273,16 @@
                     data: 'supplier',
                     name: 'supplier'
                 },
-
+                {
+                    data: 'sc_total_amount',
+                    name: 'sc_total_amount',
+                    width: '320px' // এখানে width বাড়ালাম
+                },
                 {
                     data: 'total_amount',
                     name: 'total_amount'
                 },
+
                 {
                     data: 'paid_amount',
                     name: 'paid_amount'
@@ -279,9 +316,9 @@
                 var hasBranch = {{ $isSuperAdmin && !$sessionBranch ? 'true' : 'false' }};
 
                 // Column indexes
-                var totalAmountIndex = hasBranch ? 5 : 4;
-                var paidAmountIndex = hasBranch ? 6 : 5;
-                var dueAmountIndex = hasBranch ? 7 : 6;
+                var totalAmountIndex = hasBranch ? 6 : 5;
+                var paidAmountIndex = hasBranch ? 7 : 6;
+                var dueAmountIndex = hasBranch ? 8 : 7;
 
                 // Total over all pages
                 var totalAmount = api.column(totalAmountIndex).data().reduce(function(a, b) {

@@ -293,6 +293,91 @@ return [
     'debit_voucher' => 'ডেবিট ভাউচার',
     'receiver' => 'প্রাপক',
 
+    'stock_report' => 'স্টক রিপোর্ট',
+    'all' => 'সব',
+    'stock_received' => 'স্টক প্রাপ্তি',
+    'stock_transfer' => 'স্টক ট্রান্সফার',
+    'current_stock' => 'বর্তমান স্টক',
+
+    'login_page_image' => 'লগইন পেজ ইমেজ',
+    'from_date' => 'শুরুর তারিখ',
+    'to_date' => 'শেষ তারিখ',
+
+    // purchase report
+    'customer_information' => 'গ্রাহক তথ্য',
+    'select_date_search' => 'দয়া করে তারিখ নির্বাচন করে সার্চ করুন',
+
+    'report' => 'রিপোর্ট',
+    'sale_report' => 'বিক্রয় রিপোর্ট',
+    'sale_information' => 'বিক্রয় তথ্য',
+    'select_date_search' => 'দয়া করে তারিখ নির্বাচন করে সার্চ করুন',
+
+    'expenses' => 'ব্যয় সমূহ',
+    'no_purchase_found' => 'কোনো ক্রয় পাওয়া যায়নি',
+    'payments' => 'পেমেন্ট সমূহ',
+    'select_customer_date_search' => 'দয়া করে ক্রেতা ও তারিখ নির্বাচন করে সার্চ করুন',
+    'customer_not_selected' => 'ক্রেতা নির্বাচন করা হয়নি',
+    'opening_due_balance' => 'ওপেনিং বকেয়া ব্যালান্স',
+
+    'fund_history' => 'ফান্ড হিস্টোরি',
+    'supplier_payments' => 'সরবরাহকারী পেমেন্টসমূহ',
+    'fund_not_selected' => 'ফান্ড নির্বাচন করা হয়নি',
+    'branch_not_selected' => 'শাখা নির্বাচন করা হয়নি',
+    'sale_collections' => 'বিক্রয় সংগ্রহ',
+    'expense_history' => 'ব্যয় ইতিহাস',
+    'customer_due_payments' => 'ক্রেতার বকেয়া আদায়',
+    'expense_total' => 'মোট ব্যয়',
+    'previous_balance' => 'পূর্বের ব্যালেন্স',
+    'balance' => 'ব্যালেন্স',
+    'history' => 'ইতিহাস',
+
+    'fund_transfer' => 'ফান্ড ট্রান্সফার',
+    'from_fund' => 'সূত্র ফান্ড',
+    'to_fund' => 'গন্তব্য ফান্ড',
+    'from_branch' => 'সূত্র শাখা',
+    'to_branch' => 'গন্তব্য শাখা',
+    'remarks' => 'মন্তব্য',
+    'fund_transfer_list' => 'ফান্ড ট্রান্সফার তালিকা',
+    'from' => 'থেকে',
+    'to' => 'পর্যন্ত',
+    'fund_receive_list' => 'ফান্ড গ্রহণ তালিকা',
+    'fund_receive' => 'ফান্ড গ্রহণ',
+
+
+
+    'fund_adjustment' => 'ফান্ড সমন্বয়',
+    'type' => 'ধরন',
+    'fund_adjustment_list' => 'ফান্ড সমন্বয়ের তালিকা',
+
+    'all_branch' => 'সমস্ত শাখা',
+    'total_sales' => 'মোট বিক্রয়',
+    'today_sale_amount' => 'আজকের বিক্রয় পরিমাণ',
+    'monthly_sale' => 'মাসিক বিক্রয়',
+    'monthly_sale_amount' => 'মাসিক বিক্রয় পরিমাণ',
+    'monthly_avg_sale' => 'মাসিক গড় বিক্রয়',
+
+    'currency' => 'মুদ্রা',
+
+
+    'scan_your_bar_code' => 'আপনার বারকোড স্ক্যান করুন',
+
+
+
+    'thank_you_shopping' => 'ধন্যবাদ! কেনাকাটার জন্য ধন্যবাদ',
+    'purchase_report' => 'ক্রয় রিপোর্ট',
+    'purchase_information' => 'ক্রয় তথ্য',
+    'previous_due' => 'পূর্বের বকেয়া',
+    'total_putchase' => 'মোট ক্রয়',
+    'summary' => 'সারসংক্ষেপ',
+    'total_purchase' => 'মোট ক্রয়',
+    'search_supplier_date' => 'দয়া করে সরবরাহকারী ও তারিখ নির্বাচন করে সার্চ করুন',
+    'supplier_not_selected' => 'সরবরাহকারী নির্বাচন করা হয়নি',
+    'from_date_not_given' => 'শুরুর তারিখ দেওয়া হয়নি',
+    'to_date_not_given' => 'শেষ তারিখ দেওয়া হয়নি',
+
+
+
+
 
 
     // common

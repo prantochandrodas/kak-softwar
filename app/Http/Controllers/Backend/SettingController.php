@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Currency;
 use App\Models\GeneralSetting;
 use App\Models\Slider;
 use App\Models\User;
@@ -24,7 +25,8 @@ class SettingController extends Controller
             }
 
             $data = GeneralSetting::first();
-            return view('backend.settings.general_setting', compact('data'));
+            $currency = Currency::where('status', 1)->get();
+            return view('backend.settings.general_setting', compact('data', 'currency'));
         } catch (\Exception $exception) {
             Alert::error('Error', $exception->getMessage());
             return redirect()->back();
@@ -43,6 +45,7 @@ class SettingController extends Controller
             $data = GeneralSetting::first();
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
+                'currency' => 'required|exists:currencies,id',
                 'email' => 'required|email',
                 'phone' => 'required',
                 'address' => 'required',
@@ -65,6 +68,7 @@ class SettingController extends Controller
             $data->address = $request->input('address');
             $data->about_company = $request->input('about_company');
             $data->copy_right_text = $request->input('copy_right_text');
+            $data->currency_id = $request->input('currency');
             $data->google_map = $request->input('google_map');
             $data->updated_by =   auth()->user()->id;
 
@@ -82,6 +86,14 @@ class SettingController extends Controller
                 $imageName = $file_name;
 
                 $data->logo = $imageName;
+            }
+            $loginPageImageName = null;
+            if ($request->hasFile('login_page_image')) {
+                $file = $request->file('login_page_image');
+                $file_name = uploadImage($file, 'logo', 'login_page_image');
+                $loginPageImageName = $file_name;
+
+                $data->login_page_image = $loginPageImageName;
             }
 
             if ($request->hasFile('favicon')) {

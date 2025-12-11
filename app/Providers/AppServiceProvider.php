@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Branch;
+use App\Models\Currency;
 use App\Models\GeneralSetting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +26,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (Schema::hasTable('general_settings')) {
-            View::share('generalSetting', GeneralSetting::first());
+            $generalSetting = GeneralSetting::first();
+
+            // যদি generalSetting এ currency_id থাকে
+            if ($generalSetting && $generalSetting->currency_id) {
+                $currency = Currency::find($generalSetting->currency_id);
+
+                if ($currency) {
+                    $generalSetting->currency_code = $currency->symbole ?? $currency->name;
+                    $generalSetting->currency_rate = $currency->rate ?? 1;
+                }
+            }
+
+            View::share('generalSetting', $generalSetting);
         }
 
         View::composer('*', function ($view) {

@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_branches', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('user_id')->nullable();
-            $table->bigInteger('branch_id')->nullable();
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('user_branches', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->bigInteger('user_id')->nullable();
+        //     $table->bigInteger('branch_id')->nullable();
+        //     $table->bigInteger('created_by')->nullable();
+        //     $table->bigInteger('updated_by')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

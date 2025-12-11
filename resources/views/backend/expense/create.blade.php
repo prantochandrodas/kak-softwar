@@ -518,36 +518,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#branch_id').on('change', function() {
-                let branchId = $(this).val();
-                let headId = $('#head_id').val();
-                $('#bank_id').trigger('change');
-                let colorText = branchId ? $('#branch_id option:selected').text() : '';
 
-                if (branchId) {
-                    $.ajax({
-                        url: '/admin/get-head/' + branchId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            $('#branchName').text(colorText || '-');
-                            $('#head_id').empty().append(
-                                '<option value="">{{ __('messages.select_one') }}</option>'
-                            );
-                            $.each(data.heads, function(key, value) {
-                                $('#head_id').append('<option value="' + value.id +
-                                    '">' + value.name + '</option>');
-                            });
-                            $('#head_id').trigger('change');
-                        }
-                    });
-                } else {
-                    $('#head_id').empty().append(
-                        '<option value="">{{ __('messages.select_one') }}</option>');
-                    $('#head_id').trigger('change');
-
-                }
-            });
 
             $('#fund_id').on('change', function() {
                 let dataId = $(this).val();

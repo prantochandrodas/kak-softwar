@@ -308,7 +308,8 @@
         <thead>
             <tr>
                 <th style="width: 5%;">{{ __('messages.serial_no') }}</th>
-                <th style="width: 25%;">{{ __('messages.product') }}</th>
+                <th style="width: 10%;">{{ __('messages.product') }} {{ __('messages.code') }}</th>
+                <th style="width: 15%;">{{ __('messages.product') }}</th>
                 <th style="width: 12%;">{{ __('messages.size') }}</th>
                 <th style="width: 12%;">{{ __('messages.color') }}</th>
                 <th style="width: 12%; text-align: center;">{{ __('messages.quantity') }}</th>
@@ -320,7 +321,10 @@
             @foreach ($transfer->details as $index => $item)
                 <tr>
                     <td style="text-align: center;">{{ $index + 1 }}</td>
-                    <td>{{ $item->variant->product->name ?? '' }}</td>
+                    <td>{{ $item->variant->product->barcode ?? '' }}
+                    </td>
+                    <td>{{ $item->variant->product->name ?? '' }} {{ $item->variant->product->name_arabic ?? '' }}
+                    </td>
                     <td>{{ $item->variant->size->name ?? '' }}</td>
                     <td>{{ $item->variant->color->color_name ?? '' }}</td>
                     <td style="text-align: center;">{{ $item->quantity }}</td>
@@ -331,7 +335,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6" style="text-align: right;"><strong>{{ __('messages.total_amount') }}:</strong></td>
+                <td colspan="7" style="text-align: right;"><strong>{{ __('messages.total_amount') }}:</strong></td>
                 <td style="text-align: right;"><strong>{{ number_format($transfer->total_amount, 2) }}</strong></td>
             </tr>
         </tfoot>

@@ -76,7 +76,6 @@ class ExpenseController extends Controller
         $branchId = session('branch_id');
 
         $heads = ExpenseHead::where('status', 1)
-            ->where('branch_id', $branchId)
             ->get();
         $funds = Fund::where('status', 1)->get();
         return view('backend.expense.index', compact('heads', 'funds'));
@@ -216,7 +215,6 @@ class ExpenseController extends Controller
             return redirect()->route('admin.dashboard');
         }
         $heads = ExpenseHead::where('status', 1)
-            ->where('branch_id', session('branch_id'))
             ->get();
         $funds = Fund::where('status', 1)->get();
 

@@ -390,12 +390,26 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">{{ __('messages.product') }}
-                                            {{ __('messages.name') }} <span class="text-danger">*</span></label>
+                                            {{ __('messages.name') }} (English) <span class="text-danger">*</span></label>
                                         <input type="text" name="name" id="name"
                                             class="form-control @error('name') is-invalid @enderror"
                                             value="{{ old('name') }}"
-                                            placeholder="{{ __('messages.product') }} {{ __('messages.name') }}">
+                                            placeholder="{{ __('messages.product') }} {{ __('messages.name') }} English">
                                         @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                {{-- name_arabic --}}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name_arabic" class="form-label">{{ __('messages.product') }}
+                                            {{ __('messages.name') }} (Arabic) <span class="text-danger">*</span></label>
+                                        <input type="text" name="name_arabic" id="name_arabic"
+                                            class="form-control @error('name_arabic') is-invalid @enderror"
+                                            value="{{ old('name_arabic') }}"
+                                            placeholder="{{ __('messages.product') }} {{ __('messages.name') }} Arabic">
+                                        @error('name_arabic')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>

@@ -290,6 +290,89 @@ return [
     'debit_voucher' => 'قسيمة خصم',
     'receiver' => 'المستلم',
 
+    'stock_report' => 'تقرير المخزون',
+    'all' => 'الكل',
+    'stock_received' => 'استلام المخزون',
+    'stock_transfer' => 'نقل المخزون',
+    'current_stock' => 'المخزون الحالي',
+
+    'login_page_image' => 'صورة صفحة تسجيل الدخول',
+
+    'from_date' => 'من التاريخ',
+    'to_date' => 'إلى التاريخ',
+
+    // purchase_report
+    'customer_information' => 'معلومات العميل',
+    'thank_you_shopping' => 'شكراً لك! شكراً لتسوقك',
+    'select_date_search' => 'يرجى اختيار التاريخ للبحث',
+
+    'report' => 'تقرير',
+    'sale_report' => 'تقرير المبيعات',
+    'sale_information' => 'معلومات المبيعات',
+    'select_date_search' => 'يرجى اختيار التاريخ للبحث',
+
+    'expenses' => 'المصروفات',
+    'no_purchase_found' => 'لم يتم العثور على أي عملية شراء',
+    'payments' => 'المدفوعات',
+    'select_customer_date_search' => 'يرجى اختيار العميل والتاريخ للبحث',
+    'customer_not_selected' => 'لم يتم اختيار العميل',
+    'opening_due_balance' => 'رصيد الديون الافتتاحي',
+
+    'fund_history' => 'تاريخ الصندوق',
+    'supplier_payments' => 'مدفوعات الموردين',
+    'fund_not_selected' => 'لم يتم اختيار الصندوق',
+    'branch_not_selected' => 'لم يتم اختيار الفرع',
+    'sale_collections' => 'تحصيلات المبيعات',
+    'expense_history' => 'سجل المصاريف',
+    'customer_due_payments' => 'تحصيل مستحقات العملاء',
+    'expense_total' => 'إجمالي المصاريف',
+    'previous_balance' => 'الرصيد السابق',
+    'balance' => 'الرصيد',
+    'history' => 'تاريخ',
+
+    'fund_transfer' => 'تحويل الأموال',
+    'from_fund' => 'من الصندوق',
+    'to_fund' => 'إلى الصندوق',
+    'from_branch' => 'من الفرع',
+    'to_branch' => 'إلى الفرع',
+    'remarks' => 'ملاحظات',
+    'fund_transfer_list' => 'قائمة تحويل الأموال',
+    'from' => 'من',
+    'to' => 'إلى',
+    'fund_receive_list' => 'قائمة استلام الأموال',
+    'fund_receive' => 'استلام الأموال',
+
+
+
+    'fund_adjustment' => 'تسوية الصندوق',
+    'type' => 'النوع',
+    'fund_adjustment_list' => 'قائمة تسوية الصندوق',
+
+    'all_branch' => 'جميع الفروع',
+    'total_sales' => 'إجمالي المبيعات',
+    'today_sale_amount' => 'مبلغ مبيعات اليوم',
+    'monthly_sale' => 'المبيعات الشهرية',
+    'monthly_sale_amount' => 'مبلغ المبيعات الشهرية',
+    'monthly_avg_sale' => 'متوسط المبيعات الشهرية',
+    'currency' => 'العملة',
+    'scan_your_bar_code' => 'امسح الباركود الخاص بك',
+
+
+
+    'purchase_report' => 'تقرير الشراء',
+    'purchase_information' => 'معلومات الشراء',
+    'previous_due' => 'المستحقات السابقة',
+    'total_putchase' => 'إجمالي الشراء',
+    'summary' => 'الملخص',
+    'total_purchase' => 'إجمالي الشراء',
+    'search_supplier_date' => 'يرجى اختيار المورد والتاريخ للبحث',
+    'supplier_not_selected' => 'لم يتم اختيار المورد',
+    'to_date_not_given' => 'لم يتم إدخال تاريخ الانتهاء',
+    'from_date_not_given' => 'لم يتم إدخال تاريخ البداية',
+
+
+
+
     // common
     'serial_no' => 'الرقم التسلسلي',
     'name' => 'الاسم',

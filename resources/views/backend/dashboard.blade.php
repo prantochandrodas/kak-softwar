@@ -149,7 +149,7 @@
                     <h5 class="dashboard-section-title"
                         style="font-weight: 700; color: #ff3b3b; font-size: 18px; border-left: 5px solid #ff3b3b;
                        padding-left: 12px; background: #fff3f3; border-radius: 6px; padding-top: 8px; padding-bottom: 8px;">
-                        Dashboard
+                        {{ __('messages.dashboard') }}
                     </h5>
                 </div>
             </div>
@@ -248,7 +248,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="text-uppercase fw-bold mb-3 text-white"
                                         style="letter-spacing: 0.5px; font-size: 14px;">
-                                        General Settings
+                                        {{ __('messages.general_settings') }}
                                     </h6>
                                 </div>
                                 <a href="{{ route('admin.setting.general') }}" style="margin-top:22px"
@@ -365,39 +365,39 @@
                             <div class="col-md-6 col-lg-4 col-xl-4">
                                 <div class="branch-card" style="background: #ffffff">
                                     <div class="branch-name">
-                                        <i class="fas fa-map-marker-alt me-2"></i>All Branch
+                                        <i class="fas fa-map-marker-alt me-2"></i>{{ __('messages.all_branch') }}
                                     </div>
                                     <div class="sale-info">
                                         <div class="sale-label">
-                                            <i class="fas fa-list me-1"></i>Total Sales
+                                            <i class="fas fa-list me-1"></i>{{ __('messages.total_sales') }}
                                         </div>
                                         <div class="sale-amount">{{ $todaySaleCount }}</div>
                                     </div>
 
                                     <div class="sale-info">
                                         <div class="sale-label">
-                                            <i class="fas fa-sun me-1"></i>Today Sale Amount
+                                            <i class="fas fa-sun me-1"></i>{{ __('messages.today_sale_amount') }}
                                         </div>
                                         <div class="sale-amount">{{ number_format($todaySale, 2) }}</div>
                                     </div>
 
                                     <div class="sale-info">
                                         <div class="sale-label">
-                                            <i class="fas fa-list me-1"></i>Monthly Sale
+                                            <i class="fas fa-list me-1"></i>{{ __('messages.monthly_sale') }}
                                         </div>
                                         <div class="sale-amount">{{ $monthlySaleCount }}</div>
                                     </div>
 
                                     <div class="sale-info" style="margin-bottom: 0;">
                                         <div class="sale-label">
-                                            <i class="fas fa-calendar me-1"></i>Monthly Sale Amount
+                                            <i class="fas fa-calendar me-1"></i>{{ __('messages.monthly_sale_amount') }}
                                         </div>
                                         <div class="sale-amount">{{ number_format($monthlySale, 2) }}</div>
                                     </div>
 
                                     <div class="sale-info">
                                         <div class="sale-label">
-                                            <i class="fas fa-chart-line me-1"></i>Monthly Avg Sale
+                                            <i class="fas fa-chart-line me-1"></i>{{ __('messages.monthly_avg_sale') }}
                                         </div>
                                         <div class="sale-amount">{{ number_format($monthlyAverageSale, 2) }}</div>
                                     </div>
@@ -415,18 +415,20 @@
                                         </div>
                                         <div class="sale-info">
                                             <div class="sale-label">
-                                                <i class="fas fa-sun me-1"></i>Today Sale Amount
+                                                <i class="fas fa-sun me-1"></i>{{ __('messages.today_sale_amount') }}
                                             </div>
                                             <div class="sale-amount"> {{ number_format($row->today_sale, 2) }}</div>
                                         </div>
                                         <div class="sale-info">
-                                            <div class="sale-label"><i class="fas fa-list me-1"></i>Monthly Sale
+                                            <div class="sale-label"><i
+                                                    class="fas fa-list me-1"></i>{{ __('messages.monthly_sale') }}
                                             </div>
                                             <div class="sale-amount">{{ $row->monthly_sale_count }}</div>
                                         </div>
                                         <div class="sale-info" style="margin-bottom: 0;">
                                             <div class="sale-label">
-                                                <i class="fas fa-calendar me-1"></i>Monthly Sale Amount
+                                                <i
+                                                    class="fas fa-calendar me-1"></i>{{ __('messages.monthly_sale_amount') }}
                                             </div>
                                             <div class="sale-amount"> {{ number_format($row->monthly_sale, 2) }}</div>
                                         </div>
@@ -481,7 +483,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="text-uppercase fw-bold mb-3 text-white"
                                         style="letter-spacing: 0.5px; font-size: 14px;">
-                                        Monthly Sale
+                                        {{ __('messages.monthly_sale') }}
                                     </h6>
                                 </div>
 

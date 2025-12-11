@@ -149,12 +149,14 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <th colspan="7" style="text-align:right">{{ __('messages.total') }}:</th>
+                            <th colspan="{{ $isSuperAdmin && !$sessionBranch ? 7 : 6 }}" style="text-align:right">
+                                {{ __('messages.total') }}:
+                            </th>
 
-                            <th></th> <!-- final_amount (optional) -->
+                            <th></th> <!-- final_amount -->
                             <th></th> <!-- paid_amount -->
                             <th></th> <!-- due_amount -->
-                            <th colspan="2"></th>
+                            <th colspan="1"></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -230,7 +232,6 @@
                     data: 'customer',
                     name: 'customer'
                 },
-
                 {
                     data: 'total_amount',
                     name: 'total_amount'
@@ -272,25 +273,30 @@
                 var intVal = function(i) {
                     return typeof i === 'string' ?
                         parseFloat(i.replace(/,/g, '')) :
-                        typeof i === 'number' ? i : 0;
+                        typeof i === 'number' ?
+                        i :
+                        0;
                 };
 
-                // Calculate totals
-                var totalAmount = api.column(4).data().reduce((a, b) => intVal(a) + intVal(b), 0);
-                var totalDiscount = api.column(5).data().reduce((a, b) => intVal(a) + intVal(b), 0);
-                var totalVat = api.column(6).data().reduce((a, b) => intVal(a) + intVal(b),
-                    0); // vat
-                var totalFinal = api.column(7).data().reduce((a, b) => intVal(a) + intVal(b),
-                    0); // final_amount
-                var totalPaid = api.column(8).data().reduce((a, b) => intVal(a) + intVal(b), 0);
-                var totalDue = api.column(9).data().reduce((a, b) => intVal(a) + intVal(b), 0);
+                // Branch column ache naki check korbo
+                var hasBranchColumn = {{ $isSuperAdmin && !$sessionBranch ? 'true' : 'false' }};
 
-                // Update footer
+                // Column index adjust
+                var finalCol = hasBranchColumn ? 8 : 7;
+                var paidCol = hasBranchColumn ? 9 : 8;
+                var dueCol = hasBranchColumn ? 10 : 9;
 
-                $(api.column(7).footer()).html(totalFinal.toFixed(2)); // final_amount
-                $(api.column(8).footer()).html(totalPaid.toFixed(2));
-                $(api.column(9).footer()).html(totalDue.toFixed(2));
+                var totalFinal = api.column(finalCol).data().reduce((a, b) => intVal(a) + intVal(b),
+                    0);
+                var totalPaid = api.column(paidCol).data().reduce((a, b) => intVal(a) + intVal(b),
+                    0);
+                var totalDue = api.column(dueCol).data().reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                $(api.column(finalCol).footer()).html(totalFinal.toFixed(2));
+                $(api.column(paidCol).footer()).html(totalPaid.toFixed(2));
+                $(api.column(dueCol).footer()).html(totalDue.toFixed(2));
             }
+
 
 
 

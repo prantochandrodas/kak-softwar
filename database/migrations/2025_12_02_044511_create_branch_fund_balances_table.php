@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branch_fund_balances', function (Blueprint $table) {
-            $table->id();
-            $table->integer('branch_id')->nullable();
-            $table->integer('fund_id')->nullable();
-            $table->integer('bank_id')->nullable();
-            $table->integer('account_id')->nullable();
-            $table->decimal('balance')->nullable();
-            $table->decimal('opening_balance')->nullable();
-            $table->date('date')->nullable();
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('branch_fund_balances', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->integer('branch_id')->nullable();
+        //     $table->integer('fund_id')->nullable();
+        //     $table->integer('bank_id')->nullable();
+        //     $table->integer('account_id')->nullable();
+        //     $table->decimal('balance')->nullable();
+        //     $table->decimal('opening_balance')->nullable();
+        //     $table->date('date')->nullable();
+        //     $table->bigInteger('created_by')->nullable();
+        //     $table->bigInteger('updated_by')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

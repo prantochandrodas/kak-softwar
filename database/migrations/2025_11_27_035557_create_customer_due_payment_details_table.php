@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_due_payment_details', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('fund_id')->nullable();
-            $table->bigInteger('bank_id')->nullable();
-            $table->bigInteger('account_id')->nullable();
-            $table->decimal('amount', 20, 2)->nullable();
-            $table->bigInteger('branch_id')->nullable();
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('updated_by')->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('customer_due_payment_details', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->bigInteger('fund_id')->nullable();
+        //     $table->bigInteger('bank_id')->nullable();
+        //     $table->bigInteger('account_id')->nullable();
+        //     $table->decimal('amount', 20, 2)->nullable();
+        //     $table->bigInteger('branch_id')->nullable();
+        //     $table->bigInteger('created_by')->nullable();
+        //     $table->bigInteger('updated_by')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

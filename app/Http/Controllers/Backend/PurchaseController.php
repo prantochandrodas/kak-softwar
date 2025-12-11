@@ -7,6 +7,7 @@ use App\Models\Bank;
 use App\Models\BankAccount;
 use App\Models\BranchFundBalance;
 use App\Models\Color;
+use App\Models\Currency;
 use App\Models\Fund;
 use App\Models\GeneralSetting;
 use App\Models\Product;
@@ -127,9 +128,9 @@ class PurchaseController extends Controller
 
 
             if ($user->roles->pluck('name')->contains('Super Admin') && session('branch_id') == null) {
-                $query = Purchase::with(['supplier', 'branch'])->orderBy('created_at', 'desc');
+                $query = Purchase::with(['supplier', 'default_currency', 'selected_currency', 'branch'])->orderBy('created_at', 'desc');
             } else {
-                $query = Purchase::with(['supplier', 'branch'])->where('branch_id', session('branch_id'))->orderBy('created_at', 'desc');
+                $query = Purchase::with(['supplier', 'default_currency', 'selected_currency', 'branch'])->where('branch_id', session('branch_id'))->orderBy('created_at', 'desc');
             }
 
 
@@ -168,6 +169,31 @@ class PurchaseController extends Controller
                     }
                 })
 
+                ->editColumn('sc_total_amount', function ($row) {
+                    if ($row->sc_total_amount && $row->selected_currency) {
+
+                        return $row->sc_total_amount . ' (' . $row->selected_currency->symbole . ')';
+                    }
+                    return '';
+                })
+                ->editColumn('total_amount', function ($row) {
+                    if ($row->total_amount && $row->default_currency) {
+                        return $row->total_amount . ' (' . $row->default_currency->symbole . ')';
+                    }
+                    return '';
+                })
+                ->editColumn('paid_amount', function ($row) {
+                    if ($row->paid_amount && $row->default_currency) {
+                        return $row->paid_amount . ' (' . $row->default_currency->symbole . ')';
+                    }
+                    return '';
+                })
+                ->editColumn('due_amount', function ($row) {
+                    if ($row->due_amount && $row->default_currency) {
+                        return $row->due_amount . ' (' . $row->default_currency->symbole . ')';
+                    }
+                    return '';
+                })
                 ->addColumn('supplier', function ($row) {
                     return $row->supplier ? $row->supplier->name : '';
                 })
@@ -340,7 +366,8 @@ class PurchaseController extends Controller
         $product = Product::where('status', 1)->get();
         $sizes = Size::where('status', 1)->get();
         $colors = Color::where('status', 1)->get();
-        return view('backend.purchase.purchase_form', compact('funds', 'suppliers', 'product', 'sizes', 'colors'));
+        $currency = Currency::where('status', 1)->get();
+        return view('backend.purchase.purchase_form', compact('funds', 'currency', 'suppliers', 'product', 'sizes', 'colors'));
     }
 
     public function getProductData(Request $request)
@@ -396,10 +423,12 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
 
+
         if (!check_access("purchase.create")) {
             Alert::error('Error', "You don't have permission!");
             return redirect()->route('admin.dashboard');
         }
+
         try {
             DB::beginTransaction();
 
@@ -418,8 +447,20 @@ class PurchaseController extends Controller
                 $status = 2; // Partially Paid
             }
 
+            $cart = $request->input('cart', []);
+            $sc_total_amount = collect($cart)->sum(function ($item) {
+                return (float) ($item['totalInSelectedCurrency'] ?? 0);
+            });
+            $generalSetting = GeneralSetting::first();
+            $dCurrency = Currency::find($generalSetting->currency_id);
+
             $purchase = Purchase::create([
 
+                'sc_id' => $request->currency_id,
+                'sc_rate' => $request->currency_rate,
+                'sc_total_amount' =>  $sc_total_amount,
+                'dc_id' =>  $generalSetting->currency_id,
+                'dc_rate' =>   $dCurrency->rate,
                 'supplier_id' => $request->supplierId,
                 'branch_id' => $request->branchId ?? session('branch_id'),
                 'invoice_no' => $invoice_no,
@@ -444,8 +485,10 @@ class PurchaseController extends Controller
                     'color_id'    =>  $item['colorId'] ?? null,
                     'purchase_id'   => $purchase->id,
                     'quantity'      => $item['qty'] ?? 0,
-                    'rate'          => $item['price'] ?? 0,
-                    'amount'        => $item['total'] ?? 0,
+                    'rate'          => $item['priceInGeneralCurrency'] ?? 0,
+                    'amount'        => $item['totalInGeneralCurrency'] ?? 0,
+                    'sc_amouunt'        => $item['totalInSelectedCurrency'] ?? 0,
+                    'sc_rate'        => $item['priceInSelectedCurrency'] ?? 0,
                     'branch_id' => $request->branchId ?? session('branch_id'),
                     'created_by'  => auth()->user()->id,
                     'created_at'    => now(),

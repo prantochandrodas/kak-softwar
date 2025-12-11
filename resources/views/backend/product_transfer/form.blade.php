@@ -317,6 +317,17 @@
                                             </div> --}}
                                         </div>
                                         <div class="row" style="margin-top: 20px">
+                                            <div class="col-md-4" style="margin-top: 5px">
+                                                <label>{{ __('messages.scan_your_bar_code') }}
+                                                </label>
+                                            </div>
+                                            <div class="col-md-8" style="margin-top: 5px">
+
+                                                <input style="background-color:#FFD700;" type="text" name="bar_code"
+                                                    id="bar_code" value="" class="form-control"
+                                                    placeholder="Scan Your Bar Code.." autofocus />
+                                            </div>
+
 
                                             <div class="col-sm-2" style="margin-top: 5px">
                                                 <label>{{ __('messages.product') }}</label>
@@ -325,8 +336,10 @@
                                                 <select id="product_id" class="form-select select2">
                                                     <option>{{ __('messages.select_one') }}</option>
                                                     @foreach ($products as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->name }}
-                                                            ({{ $item->product_code }})
+                                                        <option value="{{ $item->id }}">({{ $item->barcode }})
+                                                            {{ $item->name }}
+                                                            {{ $item->name_arabic }}
+
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -360,8 +373,8 @@
                                             </div>
                                             <div class="col-sm-4" style="margin-top: 5px">
                                                 <input type="number" name="available_stock" id="available_stock"
-                                                    placeholder="{{ __('messages.available_stock') }}" class="form-control"
-                                                    readonly>
+                                                    placeholder="{{ __('messages.available_stock') }}"
+                                                    class="form-control" readonly>
                                             </div>
                                             <div class="col-sm-2" style="margin-top: 5px">
                                                 <label>{{ __('messages.transfer_quantity') }}</label>
@@ -395,7 +408,10 @@
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         </th>
-                                                        <th class="text-center" width="20%">
+                                                        <th class="text-center" width="10%">
+                                                            {{ __('messages.product') }} {{ __('messages.code') }}
+                                                        </th>
+                                                        <th class="text-center" width="10%">
                                                             {{ __('messages.product') }} {{ __('messages.name') }}
                                                         </th>
                                                         <th class="text-center" width="20%">
@@ -562,8 +578,10 @@
             let cart = [];
 
             $('#product_add_button').on('click', function() {
+                let fullText = $('#product_id option:selected').text();
+                let productCode = fullText.split(')')[0].replace('(', '');
+                let productName = fullText.split(')')[1].trim();
                 let productId = $('#product_id').val();
-                let productName = $('#product_id option:selected').text();
                 let variantId = $('#variant_id').val();
                 let variantName = $('#variant_id option:selected').text();
                 let availableStock = parseFloat($('#available_stock').val());
@@ -598,6 +616,7 @@
 
                 // Add to cart array
                 cart.push({
+                    productCode,
                     productId,
                     productName,
                     variantId,
@@ -633,6 +652,7 @@
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
+                        <td class="text-center">${item.productCode}  <input type="hidden""></td>
                         <td class="text-center">${item.productName}  <input type="hidden" name="product_id[]" value="${item.productId}"></td>
                         <td class="text-center">${item.variantName}  <input type="hidden" name="variant_id[]" value="${item.variantId}"></td>
                         <td class="text-center">${item.rate} <input type="hidden" name="rate[]" value="${item.rate}"></td>
@@ -720,6 +740,34 @@
                 }
 
             });
+            $('#bar_code').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key pressed
+                    e.preventDefault();
+                    let barcode = $(this).val().trim();
+                    if (!barcode) return;
+
+                    $.ajax({
+                        url: '/admin/get-product-by-barcode/' + barcode,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.success) {
+                                // Product auto select
+                                $('#product_id').val(res.product.id).trigger('change');
+
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Product not found!',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
             $('#product_id').on('change', function() {
                 let dataId = $(this).val();
                 var branchId = $('#form_branch_id').val();

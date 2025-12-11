@@ -312,7 +312,7 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                         <!--begin:Menu link-->
                         <span class="menu-link">
                             <span class="menu-icon">
-                                <i class="fa-solid fa-gear fa-2x"></i>
+                                <i class="fa-solid fa-money-bill-wave"></i>
                             </span>
                             <span class="menu-title">{{ __('messages.expense_management') }}</span>
                             <span class="menu-arrow"></span>
@@ -343,6 +343,208 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __('messages.expense') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+
+
+
+                        </div>
+                        <!--end:Menu sub-->
+                    </div>
+                    <!--end:Menu item-->
+                @endif
+
+
+                @if (check_permission(['fund-transfer.list', 'fund-transfer.delete', 'fund-receive-list', 'fund-transfer.create']))
+                    <div data-kt-menu-trigger="click"
+                        class="menu-item menu-accordion {{ request()->routeIs('fund.transfer.list') || request()->routeIs('fund-transfer') || request()->routeIs('fund.receive.list') ? ' show' : '' }}">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                            </span>
+                            <span class="menu-title">{{ __('messages.fund_transfer') }}</span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        <!--end:Menu link-->
+                        <!--begin:Menu sub-->
+                        <div class="menu-sub menu-sub-accordion">
+                            @if (check_permission(['fund-transfer.create']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund-transfer') ? ' active' : '' }}"
+                                        href="{{ route('fund-transfer') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_transfer') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['fund-transfer.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund.transfer.list') ? ' active' : '' }}"
+                                        href="{{ route('fund.transfer.list') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_transfer_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['fund-receive-list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund.receive.list') ? ' active' : '' }}"
+                                        href="{{ route('fund.receive.list') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_receive_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+
+                            <!--begin:Menu item-->
+
+
+                            <!--end:Menu item-->
+                        </div>
+                        <!--end:Menu sub-->
+                    </div>
+                @endif
+
+                @if (check_permission([
+                        'fund.list',
+                        'fund.create',
+                        'fund.edit',
+                        'fund.delete',
+                        'fund.status',
+                        'bank.list',
+                        'bank.create',
+                        'bank.edit',
+                        'bank.delete',
+                        'bank.status',
+                        'bank-account.list',
+                        'bank-account.create',
+                        'bank-account.edit',
+                        'bank-account.delete',
+                        'bank-account.status',
+                        'bank_branch.list',
+                        'bank_branch.create',
+                        'bank_branch.edit',
+                        'bank_branch.delete',
+                        'bank_branch.status',
+                        'fund-adjustment.list',
+                        'fund-adjustment.create',
+                    ]))
+
+
+                    <div data-kt-menu-trigger="click"
+                        class="menu-item menu-accordion {{ request()->routeIs('bank-branch.index') || request()->routeIs('fund-adjustment.index') || request()->routeIs('fund-adjustment.form') || request()->routeIs('fund.current_balance') || request()->routeIs('fund.index') || request()->routeIs('bank.index') || request()->routeIs('branch.index') || request()->routeIs('bank-account.index') ? ' show' : '' }}">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </span>
+                            <span class="menu-title">{{ __('messages.fund_management') }}</span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        <!--end:Menu link-->
+                        <!--begin:Menu sub-->
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{ request()->routeIs('fund.current_balance') ? ' active' : '' }}"
+                                    href="{{ route('fund.current_balance') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">{{ __('messages.fund') }}
+                                        {{ __('messages.current_balance') }}</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            @if (check_permission(['fund-adjustment.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund-adjustment.form') ? ' active' : '' }}"
+                                        href="{{ route('fund-adjustment.form') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_adjustment') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['fund-adjustment.create']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund-adjustment.index') ? ' active' : '' }}"
+                                        href="{{ route('fund-adjustment.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_adjustment_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['fund.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund.index') ? ' active' : '' }}"
+                                        href="{{ route('fund.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['bank.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('bank.index') ? ' active' : '' }}"
+                                        href="{{ route('bank.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.bank_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['bank_branch.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('bank-branch.index') ? ' active' : '' }}"
+                                        href="{{ route('bank-branch.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.bank_branch_list') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['bank-account.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('bank-account.index') ? ' active' : '' }}"
+                                        href="{{ route('bank-account.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.bank_account_list') }}</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
@@ -519,7 +721,7 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                         <!--begin:Menu link-->
                         <span class="menu-link">
                             <span class="menu-icon">
-                                <i class="fa-solid fa-gear fa-2x"></i>
+                                <i class="fa-solid fa-box"></i>
                             </span>
                             <span class="menu-title">{{ __('messages.transfer') }}
                                 {{ __('messages.product') }}</span>
@@ -571,6 +773,103 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                         <!--end:Menu sub-->
                     </div>
                     <!--end:Menu item-->
+                @endif
+
+                @if (check_permission(['stock-report', 'purchase-report', 'sale-report', 'customer-report', 'fund-history-report']))
+                    <div data-kt-menu-trigger="click"
+                        class="menu-item menu-accordion {{ request()->routeIs('stock-report') || request()->routeIs('fund-history-report') || request()->routeIs('customer-report') || request()->routeIs('purchase-report') || request()->routeIs('sale-report') ? ' show' : '' }}">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                            <span class="menu-icon">
+                                <i class="fa-solid fa-chart-area"></i>
+                            </span>
+                            <span class="menu-title">{{ __('messages.report') }}
+                            </span>
+                            <span class="menu-arrow"></span>
+                        </span>
+                        <!--end:Menu link-->
+                        @if (check_permission(['stock-report']))
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('stock-report') ? ' active' : '' }}"
+                                        href="{{ route('stock-report') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.stock_report') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+
+                            </div>
+                        @endif
+                        @if (check_permission(['purchase-report']))
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('purchase-report') ? ' active' : '' }}"
+                                        href="{{ route('purchase-report') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.purchase_report') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+
+                            </div>
+                        @endif
+                        @if (check_permission(['sale-report']))
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('sale-report') ? ' active' : '' }}"
+                                        href="{{ route('sale-report') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.sale_report') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            </div>
+                        @endif
+                        @if (check_permission(['customer-report']))
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('customer-report') ? ' active' : '' }}"
+                                        href="{{ route('customer-report') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.customer') }}
+                                            {{ __('messages.report') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            </div>
+                        @endif
+                        @if (check_permission(['fund-history-report']))
+                            <div class="menu-sub menu-sub-accordion">
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('fund-history-report') ? ' active' : '' }}"
+                                        href="{{ route('fund-history-report') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.fund_history') }}
+                                        </span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            </div>
+                        @endif
+                        <!--end:Menu sub-->
+                    </div>
                 @endif
 
 
@@ -711,115 +1010,8 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                     <!--end:Menu item-->
                 @endif
 
-                @if (check_permission([
-                        'fund.list',
-                        'fund.create',
-                        'fund.edit',
-                        'fund.delete',
-                        'fund.status',
-                        'bank.list',
-                        'bank.create',
-                        'bank.edit',
-                        'bank.delete',
-                        'bank.status',
-                        'bank-account.list',
-                        'bank-account.create',
-                        'bank-account.edit',
-                        'bank-account.delete',
-                        'bank-account.status',
-                        'bank_branch.list',
-                        'bank_branch.create',
-                        'bank_branch.edit',
-                        'bank_branch.delete',
-                        'bank_branch.status',
-                    ]))
 
 
-                    <div data-kt-menu-trigger="click"
-                        class="menu-item menu-accordion {{ request()->routeIs('bank-branch.index') || request()->routeIs('fund.current_balance') || request()->routeIs('fund.index') || request()->routeIs('bank.index') || request()->routeIs('branch.index') || request()->routeIs('bank-account.index') ? ' show' : '' }}">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fa-solid fa-briefcase"></i>
-                            </span>
-                            <span class="menu-title">{{ __('messages.fund_management') }}</span>
-                            <span class="menu-arrow"></span>
-                        </span>
-                        <!--end:Menu link-->
-                        <!--begin:Menu sub-->
-                        <div class="menu-sub menu-sub-accordion">
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link {{ request()->routeIs('fund.current_balance') ? ' active' : '' }}"
-                                    href="{{ route('fund.current_balance') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">{{ __('messages.fund') }}
-                                        {{ __('messages.current_balance') }}</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            @if (check_permission(['fund.list']))
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->routeIs('fund.index') ? ' active' : '' }}"
-                                        href="{{ route('fund.index') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __('messages.fund_list') }}</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                            @endif
-                            @if (check_permission(['bank.list']))
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->routeIs('bank.index') ? ' active' : '' }}"
-                                        href="{{ route('bank.index') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __('messages.bank_list') }}</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                            @endif
-                            @if (check_permission(['bank_branch.list']))
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->routeIs('bank-branch.index') ? ' active' : '' }}"
-                                        href="{{ route('bank-branch.index') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __('messages.bank_branch_list') }}</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                            @endif
-                            @if (check_permission(['bank-account.list']))
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link {{ request()->routeIs('bank-account.index') ? ' active' : '' }}"
-                                        href="{{ route('bank-account.index') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">{{ __('messages.bank_account_list') }}</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                            @endif
-
-
-
-                        </div>
-                        <!--end:Menu sub-->
-                    </div>
-                    <!--end:Menu item-->
-                @endif
 
                 @if (check_permission([
                         'user.list',
@@ -957,6 +1149,11 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                         'branch.edit',
                         'branch.delete',
                         'branch.status',
+                        'currency.list',
+                        'currency.create',
+                        'currency.edit',
+                        'currency.delete',
+                        'currency.status',
                     ]))
                     <!--begin:Menu item-->
                     <div data-kt-menu-trigger="click"
@@ -985,7 +1182,7 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                                     <!--end:Menu link-->
                                 </div>
                             @endif --}}
-                            @if (check_permission(['general.settings']))
+                            @if (check_permission(['branch.list']))
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link {{ request()->routeIs('branch.index') ? ' active' : '' }}"
@@ -994,6 +1191,19 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                         <span class="menu-title">{{ __('messages.branch') }}</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+                            @if (check_permission(['currency.list']))
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link {{ request()->routeIs('currency.index') ? ' active' : '' }}"
+                                        href="{{ route('currency.index') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">{{ __('messages.currency') }}</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>

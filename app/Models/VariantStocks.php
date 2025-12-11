@@ -11,6 +11,14 @@ class VariantStocks extends Model
     protected $guarded = [];
     public function product()
     {
-        return $this->belongsTo([Product::class, 'product_id']);
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+    public function Branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+    public function variant()
+    {
+        return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 }

@@ -16,14 +16,14 @@ class PermissionOnlySeeder extends Seeder
         $permissions = [
 
             [
-                'group_name' => 'customer-information',
+                'group_name' => 'currency',
                 'permissions' => [
-                    'customer-information.list',
-                    'customer-information.create',
-                    'customer-information.edit',
-                    'customer-information.delete',
-                    'customer-information.status',
-                    'customer-due-payment', // ⬅ নতুন permission
+                    'currency.list',
+                    'currency.create',
+                    'currency.edit',
+                    'currency.status',
+                    'currency.delete',
+
                 ],
             ],
 

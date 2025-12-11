@@ -388,7 +388,7 @@
                                     <option value="outside_vat" {{ $data->vat_type == 'outside_vat' ? 'selected' : '' }}>
                                         Ourside Product Vat</option>
                                 </select>
-                                @error('vat')
+                                @error('vat_type')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -422,6 +422,22 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            <div class="mb-3">
+                                <label for="currency" class="form-label">{{ __('messages.currency') }}</label>
+                                <select name="currency" id="currency"
+                                    class="form-select @error('currency') is-invalid @enderror">
+                                    <option value="">Select One</option>
+                                    @foreach ($currency as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ $data->currency_id == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                            ({{ $item->symbole }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('currency')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
                             <div class="mb-3">
                                 <label for="logo" class="form-label">{{ __('messages.logo') }}</label>
@@ -435,6 +451,7 @@
                                     style="width: 100px" alt="logo">
                             </div>
 
+
                             <div class="mb-3">
                                 <label for="favicon" class="form-label">{{ __('messages.fav_icon') }}</label>
                                 <input type="file" name="favicon" id="favicon"
@@ -446,7 +463,18 @@
                                 <img src="{{ asset('uploads/settings/' . $data->favicon) }}" class="mt-2"
                                     style="width: 100px" alt="favicon">
                             </div>
+                            <div class="mb-3">
+                                <label for="login_page_image"
+                                    class="form-label">{{ __('messages.login_page_image') }}</label>
+                                <input type="file" name="login_page_image" id="login_page_image"
+                                    class="form-control @error('login_page_image') is-invalid @enderror">
+                                @error('login_page_image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 
+                                <img src="{{ asset('uploads/logo/' . $data->login_page_image) }}" class="mt-2"
+                                    style="width: 100px" alt="login_page_image">
+                            </div>
 
 
 

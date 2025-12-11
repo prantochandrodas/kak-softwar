@@ -387,7 +387,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">{{ __('messages.date') }}</label>
-                                        <input type="date" class="form-control date">
+                                        <input type="date" class="form-control date" value="{{ date('Y-m-d') }}">
                                     </div>
                                     <div class="col-md-12" style="display: flex; justify-content:end;">
                                         <div class="mt-3">
@@ -404,7 +404,7 @@
                             <table class="table table-bordered" id="cartTable">
                                 <thead>
                                     <tr>
-                                        <th>{{ __('messages.serial_no') }}</th>
+                                        <th>{{ __('messages.date') }}</th>
                                         <th>{{ __('messages.supplier') }}</th>
                                         <th>{{ __('messages.invoice_no') }}</th>
                                         <th>{{ __('messages.due_amount') }}</th>
@@ -496,7 +496,8 @@
                 box.find('select').not('#branch_id').val('').trigger('change');
                 box.find('.due_amount').val('');
                 box.find('.amount').val('');
-                box.find('.date').val('');
+                let today = new Date().toISOString().split('T')[0];
+                box.find('.date').val(today);
                 box.find('.bank-section').hide();
             });
 
@@ -591,7 +592,8 @@
                 box.find('select').not('#branch_id').val('').trigger('change');
                 box.find('.due_amount').val('');
                 box.find('.amount').val('');
-                box.find('.date').val('');
+                let today = new Date().toISOString().split('T')[0];
+                box.find('.date').val(today);
                 box.find('.bank-section').hide();
                 if (branchId) {
 

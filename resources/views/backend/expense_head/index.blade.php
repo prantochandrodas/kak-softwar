@@ -59,79 +59,22 @@
 <div id="kt_app_content" class="app-content flex-column-fluid">
     <!--begin::Content container-->
     <div id="kt_app_content_container" class="app-container container-fluid">
-        @php
-            $isSuperAdmin = auth()->user()->roles->pluck('name')->contains('Super Admin');
-            $sessionBranch = session('branch_id');
-        @endphp
-        @if ($isSuperAdmin)
-            {{-- add button  --}}
-            <button data-bs-toggle="modal" data-bs-target="#dataCreateModal" class="btn btn-sm btn-success mb-2"><svg
-                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    style="width: 20px; height:20px">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z"
-                            fill="#ffffff"></path>
-                    </g>
-                </svg> {{ __('messages.add') }}
-            </button>
-        @endif
-        @php
-            $isSuperAdmin = auth()->user()->roles->pluck('name')->contains('Super Admin');
-            $sessionBranch = session('branch_id');
-        @endphp
-        @if ($isSuperAdmin && !$sessionBranch)
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light py-2">
-                    <h6 class="mb-0"><i class="bi bi-funnel-fill me-2 text-primary"></i> {{ __('messages.filter') }}
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <form id="filterForm" class="row g-3 align-items-end">
+        <button data-bs-toggle="modal" data-bs-target="#dataCreateModal" class="btn btn-sm btn-success mb-2"><svg
+                viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height:20px">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="m3.99 16.854-1.314 3.504a.75.75 0 0 0 .966.965l3.503-1.314a3 3 0 0 0 1.068-.687L18.36 9.175s-.354-1.061-1.414-2.122c-1.06-1.06-2.122-1.414-2.122-1.414L4.677 15.786a3 3 0 0 0-.687 1.068zm12.249-12.63 1.383-1.383c.248-.248.579-.406.925-.348.487.08 1.232.322 1.934 1.025.703.703.945 1.447 1.025 1.934.058.346-.1.677-.348.925L19.774 7.76s-.353-1.06-1.414-2.12c-1.06-1.062-2.121-1.415-2.121-1.415z"
+                        fill="#ffffff"></path>
+                </g>
+            </svg> {{ __('messages.add') }}
+        </button>
 
-
-                        <div class="col-md-4">
-                            <label for="branch_id" class="form-label mb-1"> {{ __('messages.branch') }}</label>
-                            <select id="branch_id" name="branch_id" class="form-select form-select-sm">
-                                <option value=""> {{ __('messages.select_one') }}</option>
-                                @foreach ($branchInfo as $branch)
-                                    <option value="{{ $branch->id }}"
-                                        {{ old('branch_id') == $branch->id ? 'selected' : '' }}>
-                                        {{ $branch->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-
-
-
-                        <!-- Buttons -->
-                        <div class="col-md-4">
-                            <button type="button" id="applyFilter" class="btn btn-sm btn-primary">
-                                <i class="bi bi-search me-1"></i> {{ __('messages.search') }}
-                            </button>
-                            <button type="button" id="resetFilter" class="btn btn-sm btn-secondary">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('messages.reset') }}
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-
-
-            </div>
-        @endif
         <table id="featuredProjectTitleHeading" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>{{ __('messages.serial_no') }}</th>
-                    @if ($isSuperAdmin && !$sessionBranch)
-                        <th>{{ __('messages.branch') }}</th>
-                    @endif
                     <th> {{ __('messages.name') }}</th>
                     <th>{{ __('messages.status') }}</th>
                     <th>{{ __('messages.action') }}</th>
@@ -184,12 +127,7 @@
                     orderable: false,
                     searchable: false
                 },
-                @if ($isSuperAdmin && !$sessionBranch)
-                    {
-                        data: 'branch',
-                        name: 'branch'
-                    },
-                @endif {
+                {
                     data: 'name',
                     name: 'name'
                 },

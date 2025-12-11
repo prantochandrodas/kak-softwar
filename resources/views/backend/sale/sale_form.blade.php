@@ -107,15 +107,15 @@
             /* Input Number Remove Arrows/Spinners*/
             /* Chrome, Safari, Edge, Opera */
             /* input::-webkit-outer-spin-button,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            input::-webkit-inner-spin-button {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -webkit-appearance: none;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                margin: 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    input::-webkit-inner-spin-button {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -webkit-appearance: none;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        margin: 0;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
 
             /* Firefox */
             /* input[type=number] {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                -moz-appearance: textfield;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        -moz-appearance: textfield;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
 
 
             .btn-sm {
@@ -315,8 +315,10 @@
                                                 <select id="product_id" class="form-select select2">
                                                     <option value="">{{ __('messages.select_one') }}</option>
                                                     @foreach ($products as $item)
-                                                        <option value="{{ $item->id }}">{{ $item->name }}
-                                                            ({{ $item->product_code }})
+                                                        <option value="{{ $item->id }}">({{ $item->barcode }})
+                                                            {{ $item->name }}
+                                                            {{ $item->name_arabic }}
+
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -334,6 +336,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="text-center" width="10%">{{ __('messages.sl') }}</th>
+                                                        <th class="text-center" width="10%">
+                                                            {{ __('messages.product') }} {{ __('messages.code') }}
                                                         <th class="text-center" width="10%">{{ __('messages.name') }}
                                                         </th>
                                                         <th class="text-center" width="10%">{{ __('messages.color') }}
@@ -346,7 +350,7 @@
                                                         </th>
                                                         <th class="text-center" width="20%">{{ __('messages.qty') }}
                                                         </th>
-                                                        <th class="text-center" width="20%">{{ __('messages.action') }}
+                                                        <th class="text-center" width="10%">{{ __('messages.action') }}
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -380,6 +384,9 @@
                                                             <th class="text-center" width="10%">{{ __('messages.sl') }}
                                                             </th>
                                                             <th class="text-center" width="15%">
+                                                                {{ __('messages.product') }} {{ __('messages.code') }}
+                                                            </th>
+                                                            <th class="text-center" width="15%">
                                                                 {{ __('messages.product') }}</th>
                                                             <th class="text-center" width="10%">
                                                                 {{ __('messages.color') }}</th>
@@ -401,7 +408,7 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th colspan="4" class="text-end">
+                                                            <th colspan="5" class="text-end">
                                                                 {{ __('messages.total') }}:</th>
                                                             <th class="text-center" id="cart_total_qty">0</th>
                                                             <th></th>
@@ -471,7 +478,7 @@
                                                 <select id="discount_type" class="form-select select2">
                                                     <option value="">{{ __('messages.select_one') }}</option>
                                                     <option value="percent">Percent (%)</option>
-                                                    <option value="flat">Flat Amount</option>
+                                                    <option value="flat" selected>Flat Amount</option>
                                                 </select>
                                             </div>
 
@@ -665,6 +672,17 @@
         </div>
         <!--end::Content-->
     </div>
+    <style>
+        .app-container {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+
+        }
+
+        .container-xxl {
+            max-width: 1400px !important;
+        }
+    </style>
 @endsection
 
 @push('script')
@@ -985,6 +1003,34 @@
                     $(this).prop('disabled', true); // user input block
                 }
             });
+            $('#bar_code').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key pressed
+                    e.preventDefault();
+                    let barcode = $(this).val().trim();
+                    if (!barcode) return;
+
+                    $.ajax({
+                        url: '/admin/get-product-by-barcode/' + barcode,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.success) {
+                                // Product auto select
+                                $('#product_id').val(res.product.id).trigger('change');
+
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Product not found!',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
             $('#product_id').on('change', function() {
                 let productId = $(this).val();
                 var branchId = $('#branch_id').val();
@@ -1029,6 +1075,7 @@
 
                             let row = `<tr data-id="${variant.id}" data-product="${variant.product_id}" data-stock="${stock}" data-vat="${singleVat}">
                                 <td class="text-center">${index + 1}</td>
+                                <td class="text-center">${variant.product?.barcode || ''}</td>
                                 <td class="text-center">${variantName}</td>
                                 <td class="text-center">${variant.color?.color_name || ''}</td>
                                 <td class="text-center">${variant.size?.name || ''}</td>
@@ -1046,6 +1093,10 @@
                         });
 
                         $('#transfer_item_table').show(); // Show table after adding rows
+                        if (res.data.length === 1) {
+                            tbody.find('.add_row')
+                                .click(); // triggers the click handler automatically
+                        }
                     }
                 });
             });
@@ -1055,7 +1106,8 @@
                 let row = $(this).closest('tr');
                 let variantId = row.data('id');
                 let productId = row.data('product'); // product id must be sent from backend
-                let productName = row.find('td:eq(1)').text();
+                let productCode = row.find('td:eq(1)').text();
+                let productName = row.find('td:eq(2)').text();
                 let color = row.find('td:eq(2)').text();
                 let size = row.find('td:eq(3)').text();
 
@@ -1111,6 +1163,7 @@
                     let cartRow = `
                         <tr data-id="${variantId}" data-stock="${stock}">
                             <td class="text-center">${sl}</td>
+                            <td class="text-center">${productCode}</td>
                             <td class="text-center">${productName}</td>
                             <td class="text-center">${color}</td>
                             <td class="text-center">${size}</td>
@@ -1122,12 +1175,14 @@
                                 <input type="hidden" name="product_id[]" value="${productId}">
                                 <input type="hidden" name="variant_id[]" value="${variantId}">
                                 <input type="hidden" name="qty[]" class="hidden_qty" value="${newQty}">
+
                             </td>
 
                             <td class="text-center rate">
                                 ${rate}
                                 <input type="hidden" name="rate[]" value="${rate}">
                             </td>
+
                             <input type="hidden" name="sub_total[]" class="hidden_total" value="${total.toFixed(2)}">
                             <td class="text-center cart_total">
                                 ${total.toFixed(2)}
@@ -1225,6 +1280,11 @@
 
                 updateCartTotals();
             });
+
+            if ($('#discount_type').val()) {
+                $('#discount_type').trigger('change');
+            }
+
 
             $(document).on('input', '#discount_percent, #discount_flat', function() {
                 updateCartTotals();

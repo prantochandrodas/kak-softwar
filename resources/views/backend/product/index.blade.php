@@ -137,10 +137,11 @@
                     <thead>
                         <tr>
                             <th>{{ __('messages.serial_no') }}</th>
+                            <th>{{ __('messages.product') }} {{ __('messages.barcode') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.name') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.product_code') }}</th>
                             {{-- <th> {{ __('messages.shit_number') }}</th> --}}
-                            <th>{{ __('messages.product') }} {{ __('messages.barcode') }}</th>
+
                             <th>{{ __('messages.product') }} {{ __('messages.category') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.sub_category') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.brand') }}</th>
@@ -209,21 +210,22 @@
                     searchable: false
                 },
                 {
+                    data: 'barcode',
+                    name: 'barcode'
+                },
+                {
                     data: 'name',
                     name: 'name'
                 },
                 {
-                    data: 'product_code',
-                    name: 'product_code'
+                    data: 'productCode',
+                    name: 'productCode'
                 },
                 // {
                 //     data: 'shit_no',
                 //     name: 'shit_no'
                 // },
-                {
-                    data: 'barcode',
-                    name: 'barcode'
-                },
+
                 {
                     data: 'category',
                     name: 'category'
@@ -335,7 +337,7 @@
                     success: function(data) {
                         $('#subcategory_id').empty().append(
                             '<option value="">{{ __('messages.select_one') }}</option>'
-                            );
+                        );
                         $.each(data.data, function(key, value) {
 
                             $('#subcategory_id').append('<option value="' + value

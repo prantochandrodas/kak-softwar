@@ -356,6 +356,7 @@
             <thead>
                 <tr>
                     <th>{{ __('messages.serial_no') }}</th>
+                    <th>{{ __('messages.product') }} {{ __('messages.code') }}</th>
                     <th>{{ __('messages.product') }}</th>
                     <th>{{ __('messages.size') }}</th>
                     <th>{{ __('messages.color') }}</th>
@@ -368,7 +369,8 @@
                 @foreach ($purchase->details as $index => $item)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td>{{ $item->product->name ?? '' }}</td>
+                        <td>{{ $item->product->barcode ?? '' }}</td>
+                        <td>{{ $item->product->name ?? '' }} {{ $item->product->name_arabic ?? '' }}</td>
                         <td>{{ $item->size->name ?? '' }}</td>
                         <td>{{ $item->color->color_name ?? '' }}</td>
                         <td>{{ $item->quantity }}</td>
@@ -379,15 +381,15 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6"><strong>{{ __('messages.total_amount') }}</strong></td>
+                    <td colspan="7"><strong>{{ __('messages.total_amount') }}</strong></td>
                     <td>{{ number_format($purchase->total_amount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="6"><strong>{{ __('messages.paid_amount') }}</strong></td>
+                    <td colspan="7"><strong>{{ __('messages.paid_amount') }}</strong></td>
                     <td>{{ number_format($purchase->paid_amount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td colspan="6"><strong>{{ __('messages.due_amount') }}</strong></td>
+                    <td colspan="7"><strong>{{ __('messages.due_amount') }}</strong></td>
                     <td>{{ number_format($purchase->due_amount, 2) }}</td>
                 </tr>
             </tfoot>

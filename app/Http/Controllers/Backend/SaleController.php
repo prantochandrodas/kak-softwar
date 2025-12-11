@@ -23,6 +23,23 @@ use Yajra\DataTables\DataTables;
 
 class SaleController extends Controller
 {
+
+    public function getProductByBarcode($barcode)
+    {
+
+        $product = Product::where('barcode', $barcode)
+            ->first();
+
+        if (!$product) {
+            return response()->json(['success' => false, 'message' => 'Product not found'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'product' => $product,
+
+        ]);
+    }
     public function salePaymentList(Request $request)
     {
         $customer_id = $request->customer_id ?? null;
@@ -119,6 +136,9 @@ class SaleController extends Controller
                     }
                 })
 
+                ->editColumn('total_amount', function ($row) {
+                    return number_format($row->total_amount - $row->vat, 2);
+                })
                 ->addColumn('final_amount', function ($row) {
                     return number_format($row->total_amount - $row->discount, 2);
                 })
@@ -146,6 +166,9 @@ class SaleController extends Controller
                     $printBtn = '<a href="' . route('sale_invoice_print', $row->id) . '" target="_blank" class="btn btn-sm btn-info ms-2">
                     <i class="fa fa-print"></i>
                  </a>';
+                    $postPrintBtn = '<a href="' . route('sale_pos_invoice_print', $row->id) . '" target="_blank" class="btn btn-sm btn-info ms-2">
+                   Pos Invoice</i>
+                 </a>';
 
 
                     // Status Toggle Icon Button
@@ -164,10 +187,10 @@ class SaleController extends Controller
                         </button>';
                     }
                     return '<div class="d-flex align-items-center  mb-2">'
-                        . $showBtn .  $printBtn  . $deleteBtn .
+                        . $showBtn .  $printBtn  . $deleteBtn .  $postPrintBtn .
                         '</div>';
                 })
-                ->rawColumns(['action', 'status', 'customer', 'final_amount', 'vat', 'branch'])
+                ->rawColumns(['action', 'status', 'customer', 'final_amount', 'vat', 'branch', 'total_amount'])
                 ->make(true);
         }
     }
@@ -194,6 +217,17 @@ class SaleController extends Controller
         $company_info   = GeneralSetting::first();
 
         return view('backend.sale.print', compact('sale', 'receive_by', 'company_info'));
+    }
+    public function sale_pos_invoice_print($id)
+    {
+
+        $sale       = Sale::with('customer', 'details', 'details.variant', 'payments')->where('id', $id)->first();
+
+
+        $receive_by     = $receive_by = auth()->user()->name;
+        $company_info   = GeneralSetting::first();
+
+        return view('backend.sale.pos_invoice', compact('sale', 'receive_by', 'company_info'));
     }
     public function form()
     {
@@ -356,7 +390,7 @@ class SaleController extends Controller
 
             DB::commit();
             Alert::success('Sale Created', 'Sale Created Successfully!');
-            return redirect()->route('sale_invoice_print', ['id' => $sale->id]);
+            return redirect()->route('sale_pos_invoice_print', ['id' => $sale->id]);
         } catch (\Exception $e) {
             DB::rollBack();
             Alert::error('Sale Generate Failed', 'Some thing went wrong!' . $e);

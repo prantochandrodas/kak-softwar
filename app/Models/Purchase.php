@@ -27,4 +27,12 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchasePayment::class, 'purchase_id');
     }
+    public function selected_currency()
+    {
+        return $this->belongsTo(Currency::class, 'sc_id');
+    }
+    public function default_currency()
+    {
+        return $this->belongsTo(Currency::class, 'dc_id');
+    }
 }

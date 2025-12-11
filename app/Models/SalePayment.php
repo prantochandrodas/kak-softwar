@@ -14,6 +14,10 @@ class SalePayment extends Model
     {
         return $this->belongsTo(Fund::class, 'fund_id');
     }
+    public function customer()
+    {
+        return $this->belongsTo(CustomerInformation::class, 'customer_id');
+    }
 
     public function bank()
     {
@@ -22,5 +26,10 @@ class SalePayment extends Model
     public function account()
     {
         return $this->belongsTo(BankAccount::class, 'account_id');
+    }
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
     }
 }

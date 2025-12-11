@@ -2,7 +2,7 @@
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-
+use Picqer\Barcode\BarcodeGeneratorPNG;
 // if (!function_exists('uploadImage')) {
 //     function uploadImage(UploadedFile $file, $path,$prefix)
 //     {
@@ -12,7 +12,13 @@ use Illuminate\Support\Facades\Storage;
 //         return $filename;
 //     }
 // }
-
+if (!function_exists('generateBarcode')) {
+    function generateBarcode($invoice_no)
+    {
+        $generator = new BarcodeGeneratorPNG();
+        return 'data:image/png;base64,' . base64_encode($generator->getBarcode($invoice_no, BarcodeGeneratorPNG::TYPE_CODE_128));
+    }
+}
 if (!function_exists('uploadImage')) {
     function uploadImage(UploadedFile $file, $path, $prefix)
     {

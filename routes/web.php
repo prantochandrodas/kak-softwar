@@ -7,16 +7,21 @@ use App\Http\Controllers\Backend\BranchController;
 use App\Http\Controllers\Backend\BrandController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ColorController;
+use App\Http\Controllers\Backend\currencycController;
+use App\Http\Controllers\Backend\currencyController;
 use App\Http\Controllers\Backend\CustomerInformationController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DesignationController;
 use App\Http\Controllers\Backend\DuePaymentController;
 use App\Http\Controllers\Backend\ExpenseHeadController;
 use App\Http\Controllers\Backend\ExpenseController;
+use App\Http\Controllers\Backend\FundAdjustmentController;
 use App\Http\Controllers\Backend\fundController;
+use App\Http\Controllers\Backend\FundTransferController;
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\ProductTransferController;
 use App\Http\Controllers\Backend\PurchaseController;
+use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\Backend\SaleController;
 use App\Http\Controllers\Backend\SizeController;
 use App\Http\Controllers\Backend\SubCategoryController;
@@ -110,6 +115,27 @@ Route::prefix('admin')->group(function () {
             Route::get('permissions', [\App\Http\Controllers\Backend\RoleController::class, 'permissions'])->name('admin.role.permissions');
         });
 
+        Route::get('fund-transfer', [FundTransferController::class, 'create'])->name('fund-transfer');
+        Route::post('fund-transfer/store', [FundTransferController::class, 'store'])->name('fund-transfer.store');
+        Route::get('fund-transfer-list', [FundTransferController::class, 'index'])->name('fund.transfer.list');
+        Route::get('fund-transfer-list/getdata', [FundTransferController::class, 'getdata'])->name('fund.transfer-list.getdata');
+        Route::delete('fund-transfer/distroy/{id}', [FundTransferController::class, 'distroy'])->name('fund-transfer.distroy');
+        Route::get('fund-receive-list', [FundTransferController::class, 'receive_index'])->name('fund.receive.list');
+        Route::get('fund-receive-list/getdata', [FundTransferController::class, 'receive_getdata'])->name('fund.receive-list.getdata');
+        Route::post('/fund-transfer/receive/{id}', [FundTransferController::class, 'receiveFundTransfer'])
+            ->name('fund-transfer.receive');
+
+        // Transfer Return
+        Route::post('/fund-transfer/return/{id}', [FundTransferController::class, 'returnTransfer'])
+            ->name('fund-transfer.return');
+
+
+
+        Route::get('fund-adjustment/form', [FundAdjustmentController::class, 'create'])->name('fund-adjustment.form');
+        Route::post('fund-adjustment/store', [FundAdjustmentController::class, 'store'])->name('fund-adjustment.store');
+        Route::get('fund-adjustment', [FundAdjustmentController::class, 'index'])->name('fund-adjustment.index');
+        Route::get('fund-adjustment/getdata', [FundAdjustmentController::class, 'getdata'])->name('fund-adjustment.getdata');
+
         Route::get('sale-due-payment', [DuePaymentController::class, 'sale_due_payment_form'])->name('sale.due.payment');
         Route::get('/get-sale-invoice/{id}', [DuePaymentController::class, 'getSaleInvoice'])->name('getSaleInvoice');
         Route::get('/get-sale-invoice-due/{id}', [DuePaymentController::class, 'getSaleInvoiceDue'])->name('getSaleInvoiceDue');
@@ -125,6 +151,8 @@ Route::prefix('admin')->group(function () {
         Route::get('branch/edit/{id}', [BranchController::class, 'edit'])->name('branch.edit');
         Route::put('branch/update/{id}', [BranchController::class, 'update'])->name('branch.update');
         Route::post('/branch/toggle-status', [BranchController::class, 'toggleStatus'])->name('branch.toggleStatus');
+
+
 
 
         Route::get('category', [CategoryController::class, 'index'])->name('category.index');
@@ -218,6 +246,15 @@ Route::prefix('admin')->group(function () {
         Route::put('fund/update/{id}', [fundController::class, 'update'])->name('fund.update');
         Route::post('/fund/toggle-status', [fundController::class, 'toggleStatus'])->name('fund.toggleStatus');
 
+        Route::get('currency', [currencyController::class, 'index'])->name('currency.index');
+        Route::get('currency/getdata', [currencyController::class, 'getdata'])->name('currency.getdata');
+        Route::get('currency/create', [currencyController::class, 'create'])->name('currency.create');
+        Route::post('currency/store', [currencyController::class, 'store'])->name('currency.store');
+        Route::delete('currency/distroy/{id}', [currencyController::class, 'distroy'])->name('currency.distroy');
+        Route::get('currency/edit/{id}', [currencyController::class, 'edit'])->name('currency.edit');
+        Route::put('currency/update/{id}', [currencyController::class, 'update'])->name('currency.update');
+        Route::post('/currency/toggle-status', [currencyController::class, 'toggleStatus'])->name('currency.toggleStatus');
+
         Route::get('expense-head', [ExpenseHeadController::class, 'index'])->name('expense-head.index');
         Route::get('expense-head/getdata', [ExpenseHeadController::class, 'getdata'])->name('expense-head.getdata');
         Route::get('expense-head/create', [ExpenseHeadController::class, 'create'])->name('expense-head.create');
@@ -297,6 +334,9 @@ Route::prefix('admin')->group(function () {
         Route::get('sale/edit/{id}', [SaleController::class, 'edit'])->name('sale.edit');
         Route::get('sale/show/{id}', [SaleController::class, 'show'])->name('sale.show');
         Route::get('/sale-invoice-print/{id}', [SaleController::class, 'sale_invoice_print'])->name('sale_invoice_print');
+        Route::get('/sale-pos-invoice-print/{id}', [SaleController::class, 'sale_pos_invoice_print'])->name('sale_pos_invoice_print');
+        Route::get('/get-product-by-barcode/{barcode}', [SaleController::class, 'getProductByBarcode'])
+            ->name('admin.get-product-by-barcode');
 
         Route::match(['get', 'post'], 'sale-payment-list', [SaleController::class, 'salePaymentList'])->name('sale-payment-list');
 
@@ -347,6 +387,12 @@ Route::prefix('admin')->group(function () {
         Route::put('sub-category/update/{id}', [SubCategoryController::class, 'update'])->name('sub-category.update');
         Route::post('/sub-category/toggle-status', [SubCategoryController::class, 'toggleStatus'])->name('sub-category.toggleStatus');
 
+
+        Route::match(['get', 'post'], 'stock-report', [ReportController::class, 'stock_report'])->name('stock-report');
+        Route::match(['get', 'post'], 'purchase-report', [ReportController::class, 'purchase_report'])->name('purchase-report');
+        Route::match(['get', 'post'], 'sale-report', [ReportController::class, 'sale_report'])->name('sale-report');
+        Route::match(['get', 'post'], 'customer-report', [ReportController::class, 'customer_report'])->name('customer-report');
+        Route::match(['get', 'post'], 'fund-history-report', [ReportController::class, 'fundHistoryReport'])->name('fund-history-report');
         //settings
         Route::prefix('settings')->group(function () {
             Route::get('general', [\App\Http\Controllers\Backend\SettingController::class, 'generalSetting'])->name('admin.setting.general');

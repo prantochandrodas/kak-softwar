@@ -152,7 +152,7 @@ class UserController extends Controller
                 'address' => 'required',
                 'phone' => [
                     'required',
-                    'regex:/^(?:\+?88)?01[3-9]\d{8}$/'
+
                 ],
                 'password' => 'required|min:6|confirmed', // updated to min:6
                 'photo' => 'sometimes|image|mimes:jpeg,wedp,png,jpg,gif|max:2048',
@@ -167,8 +167,7 @@ class UserController extends Controller
                 'designation_id.required' => 'Designation is required.',
                 'designation_id.exists' => 'Selected designation does not exist.',
                 'phone.required' => 'Phone number is required.',
-                'phone.unique' => 'This mobile number is already in use.',
-                'phone.regex' => 'Please enter a valid Bangladeshi mobile number. Example: 01700000000, +8801700000000, or 8801700000000',
+
                 'password.required' => 'Password is required.',
                 'password.min' => 'Password must be at least 6 characters.',
                 'password.confirmed' => 'Password confirmation does not match.',
@@ -191,6 +190,7 @@ class UserController extends Controller
 
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
+                'status'  => 1,
                 'created_by'  => auth()->user()->id,
             ];
 
@@ -275,7 +275,6 @@ class UserController extends Controller
                 'address' => 'required',
                 'phone' => [
                     'required',
-                    'regex:/^(?:\+?88)?01[3-9]\d{8}$/'
                 ],
                 'password' => 'nullable|min:6|confirmed', // updated to min:6
                 'photo' => 'sometimes|image|mimes:jpeg,wedp,png,jpg,gif|max:2048',
@@ -290,8 +289,7 @@ class UserController extends Controller
                 'designation_id.required' => 'Designation is required.',
                 'designation_id.exists' => 'Selected designation does not exist.',
                 'phone.required' => 'Phone number is required.',
-                'phone.unique' => 'This mobile number is already in use.',
-                'phone.regex' => 'Please enter a valid Bangladeshi mobile number. Example: 01700000000, +8801700000000, or 8801700000000',
+
                 'password.required' => 'Password is required.',
                 'password.min' => 'Password must be at least 6 characters.',
                 'password.confirmed' => 'Password confirmation does not match.',

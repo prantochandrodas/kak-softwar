@@ -44,6 +44,7 @@ class ProductController extends Controller
             $query = Product::with(['category', 'subcategory', 'unit', 'brand'])->orderBy('created_at', 'desc');
 
 
+
             if ($request->categories) {
                 $query->where('category_id', $request->categories);
             }
@@ -66,6 +67,9 @@ class ProductController extends Controller
                 ->editColumn('status', function ($row) {
                     return $row->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                 })
+                ->editColumn('name', function ($row) {
+                    return $row->name . '  ' . $row->name_arabic;
+                })
                 ->addColumn('category', function ($row) {
                     return $row->category ? $row->category->name : '';
                 })
@@ -78,6 +82,13 @@ class ProductController extends Controller
                 ->addColumn('brand', function ($row) {
                     return $row->brand ? $row->brand->name : '';
                 })
+                ->addColumn('productCode', function ($row) {
+                    return $row->barcode ? $row->barcode : '';
+                })
+                ->editColumn('barcode', function ($row) {
+                    return '<img style="width:150px" src="' . generateBarcode($row->barcode) . '" alt="Product Barcode">';
+                })
+
 
                 ->addColumn('action', function ($row) {
                     $deleteBtn = '';
@@ -115,7 +126,7 @@ class ProductController extends Controller
                         . $showBtn . $editBtn . $toggleBtn .
                         '</div>';
                 })
-                ->rawColumns(['action', 'status', 'category', 'profit', 'brand', 'group'])
+                ->rawColumns(['action', 'name', 'status', 'category', 'profit', 'brand', 'group', 'barcode'])
                 ->make(true);
         }
     }
@@ -142,6 +153,7 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit' => 'required|exists:units,id',
             'subcategory_id' => 'nullable|exists:sub_categories,id',
@@ -174,6 +186,7 @@ class ProductController extends Controller
                 'unit_id' =>  $request->unit,
                 'brand_id' =>  $request->brand_id,
                 'name' => $request->name,
+                'name_arabic' => $request->name_arabic,
                 'purchase_price' =>  $request->purchase_price,
                 'sale_price' =>  $request->sale_price,
                 'barcode' =>  $request->barcode,
@@ -221,6 +234,7 @@ class ProductController extends Controller
         $find = Product::find($id);
         $request->validate([
             'name' => 'required|string|max:255',
+            'name_arabic' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'unit' => 'required|exists:units,id',
             'subcategory_id' => 'nullable|exists:sub_categories,id',
@@ -270,6 +284,7 @@ class ProductController extends Controller
                 'unit_id' =>  $request->unit,
                 'brand_id' =>  $request->brand_id,
                 'name' => $request->name,
+                'name_arabic' => $request->name_arabic,
                 'purchase_price' =>  $request->purchase_price,
                 'sale_price' =>  $request->sale_price,
                 'barcode' =>  $request->barcode,

@@ -207,6 +207,20 @@
                                         @enderror
                                     </div>
                                 </div>
+                                {{-- name_arabic --}}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name_arabic" class="form-label">{{ __('messages.product') }}
+                                            {{ __('messages.name') }} (Arabic) <span class="text-danger">*</span></label>
+                                        <input type="text" name="name_arabic" id="name_arabic"
+                                            class="form-control @error('name_arabic') is-invalid @enderror"
+                                            value="{{ $data->name_arabic }}"
+                                            placeholder="{{ __('messages.product') }} {{ __('messages.name') }} Arabic">
+                                        @error('name_arabic')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                                 {{-- unit --}}
                                 <div class="col-md-6">
                                     <div class="mb-3">

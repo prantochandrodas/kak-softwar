@@ -10,24 +10,7 @@
         @csrf
         @method('put')
         <div class="row">
-            @php
-                $isSuperAdmin = auth()->user()->roles->pluck('name')->contains('Super Admin');
-                $sessionBranch = session('branch_id');
-            @endphp
-            @if ($isSuperAdmin && !$sessionBranch)
-                <div class="col-md-12 mb-3">
-                    <label for="branch_id" class="form-label mb-1"> {{ __('messages.branch') }}</label>
-                    <select id="branch_id" name="branch_id" class="form-select form-select-sm" required>
-                        <option value=""> {{ __('messages.select_one') }}</option>
-                        @foreach ($branchInfo as $branch)
-                            <option value="{{ $branch->id }}" {{ $data->branch_id == $branch->id ? 'selected' : '' }}>
-                                {{ $branch->name }}
-                            </option>
-                        @endforeach
-                    </select>
 
-                </div>
-            @endif
             <!-- name -->
             <div class="col-md-12 mb-3">
                 <label for="name" class="form-label fw-bold text-dark"> {{ __('messages.name') }}:</label>

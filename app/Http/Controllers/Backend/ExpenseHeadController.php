@@ -36,16 +36,7 @@ class ExpenseHeadController extends Controller
         if ($request->ajax()) {
             $user = Auth::user();
 
-            if ($user->roles->pluck('name')->contains('Super Admin') && session('branch_id') == null) {
-                // Super Admin হলে সব supplier দেখাবে
-                $query =  ExpenseHead::with('branch')->orderBy('created_at', 'desc');
-            } else {
-                $query = ExpenseHead::with('branch')->orderBy('created_at', 'desc')->where('branch_id', session('branch_id'));
-            }
-
-            if ($request->branch_id) {
-                $query->where('branch_id', $request->branch_id);
-            }
+            $query =  ExpenseHead::with('branch')->orderBy('created_at', 'desc');
 
 
             $data = $query->get();
@@ -55,9 +46,7 @@ class ExpenseHeadController extends Controller
                 ->editColumn('status', function ($row) {
                     return $row->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                 })
-                ->addColumn('branch', function ($row) {
-                    return $row->branch ?  $row->branch->name : '';
-                })
+
                 ->addColumn('action', function ($row) {
                     $deleteBtn = '';
                     $editBtn = '';
@@ -95,7 +84,7 @@ class ExpenseHeadController extends Controller
                         . $editBtn . $toggleBtn .
                         '</div>';
                 })
-                ->rawColumns(['action', 'status', 'branch'])
+                ->rawColumns(['action', 'status'])
                 ->make(true);
         }
     }
@@ -116,7 +105,6 @@ class ExpenseHeadController extends Controller
 
 
             ExpenseHead::create([
-                'branch_id' => $request->branch_id ?? session('branch_id'),
                 'name' => $request->name,
                 'status' => 1,
                 'created_by'  => auth()->user()->id,

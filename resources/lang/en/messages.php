@@ -16,6 +16,18 @@ return [
     'purchase_management' => 'Purchase Management',
     'expense_management' => 'Expense Management',
 
+    'scan_your_bar_code' => 'Scan Your Bar Code',
+
+
+    // dashboard
+
+    'all_branch' => 'All Branch',
+    'total_sales' => 'Total Sales',
+    'today_sale_amount' => 'Today Sale Amount',
+    'monthly_sale' => 'Monthly Sale',
+    'monthly_sale_amount' => 'Monthly Sale Amount',
+    'monthly_avg_sale' => 'Monthly Avg Sale',
+    'currency' => 'Currency',
 
     // user list
     'edit_user' => 'Edit User',
@@ -147,6 +159,7 @@ return [
 
 
     // product
+
     'product_list' => 'Product List',
     'product' => 'Product',
     'create_product' => 'Create Product',
@@ -228,6 +241,18 @@ return [
 
 
     'terms_condition' => 'Terms & Condition',
+    'current_stock' => 'Current Stock',
+
+
+    // currency
+    'currency' => 'Currency',
+    'create_currency' => 'Create Currency',
+    'edit_currency' => 'Edit Currency',
+    'symbole' => 'Symbole',
+    'rate' => 'Rate',
+    'selected_currency_price' => 'Selected Currency Price',
+    'selected_currency_total_price' => 'Selected Currency Total Price',
+    'selected_currency_total_amount' => 'Selected Currency Total Amount',
 
 
     // sale
@@ -292,9 +317,87 @@ return [
     'debit_voucher' => 'Debit Voucher',
     'receiver' => 'Receiver',
 
+    // stock report
+    'stock_report' => 'Stock Report',
+    'all' => 'All',
+    'stock_received' => 'Stock Received',
+    'stock_transfer' => 'Stock Transfer',
+
+    // sale report
+    'sale_report' => 'Sale Report',
+    'sale_information' => 'Sale Information',
+    'select_date_search' => 'Please select date to search',
+    'report' => 'Report',
+
+    'expenses' => 'Expenses',
+    'no_purchase_found' => 'No purchase found',
+    'payments' => 'Payments',
+    'select_customer_date_search' => 'Please select customer and date to search',
+    'customer_not_selected' => 'Customer not selected',
+    'opening_due_balance' => 'Opening Due Blance',
+
+    // fund history
+    'fund_history' => 'Fund History',
+    'supplier_payments' => 'Supplier Payments',
+    'fund_not_selected' => 'Fund Not Selected',
+    'branch_not_selected' => 'Branch Not Selected',
+    'sale_collections' => 'Sale Collections',
+    'expense_history' => 'Expense History',
+    'customer_due_payments' => 'Customer Due Payments Collection',
+    'expense_total' => 'Expense Total',
+    'previous_balance' => 'Previous Balance',
+    'balance' => 'Balance',
+    'history' => 'History',
+
+
+    // fund adjustment
+
+    'fund_adjustment' => 'Fund Adjustment',
+    'type' => 'Type',
+    'fund_adjustment_list' => 'Fund Adjustment List',
+
+    // fund transfer
+    'fund_transfer' => 'Fund Transfer',
+    'from_fund' => 'From Fund',
+    'to_fund' => 'To Fund',
+    'from_branch' => 'From Branch',
+    'to_branch' => 'To Branch',
+    'remarks' => 'Remarks',
+    'fund_transfer_list' => 'Fund Transfer List',
+    'from' => 'From',
+    'to' => 'To',
+    'fund_receive_list' => 'Fund Receive List',
+    'fund_receive' => 'Fund Receive',
+
+
+
+
+
+    // purchase report
+    'thank_you_shopping' => 'Thank you! Thank you for shopping',
+    'customer_information' => 'Customer Information',
+    'purchase_report' => 'Purchase Report',
+    'purchase_information' => 'Purchase Information',
+    'previous_due' => 'Previous Due',
+    'total_putchase' => 'Total Purchase',
+    'summary' => 'Summary',
+    'total_purchase' => 'Total Purchase',
+    'search_supplier_date' => 'Please select supplier and date to search',
+    'supplier_not_selected' => 'Supplier not selected',
+    'from_date_not_given' => 'From date not given',
+    'to_date_not_given' => 'To date not given',
+
+
+
+
+    // setting
+    'login_page_image' => 'Login Page Image',
 
 
     // common
+
+    'from_date' => 'From Date',
+    'to_date' => 'To Date',
     'serial_no' => 'Serial No',
     'name' => 'Name',
     'email' => 'Email',

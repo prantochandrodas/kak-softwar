@@ -380,6 +380,30 @@
                                                 id="purchase_date" value="{{ date('Y-m-d') }}">
                                         </div>
 
+
+
+                                        <div class="mb-3">
+                                            <label for="currency_id" class="form-label">{{ __('messages.currency') }} <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="currency_id" id="currency_id" class="form-select">
+                                                <option value="">{{ __('messages.select_one') }}</option>
+                                                @foreach ($currency as $item)
+                                                    <option value="{{ $item->id }}" data-rate="{{ $item->rate }}">
+                                                        {{ $item->name }}
+                                                        ({{ $item->symbole }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="currency_id" class="form-label">{{ __('messages.currency') }}
+                                                {{ __('messages.rate') }}<span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control border-dark" id="rate"
+                                                name="rate" placeholder="{{ __('messages.rate') }}" step="any">
+
+                                        </div>
+
+
                                         <div class="mb-3">
                                             <label for="transporation_cost"
                                                 class="form-label">{{ __('messages.transporation_cost') }}
@@ -426,12 +450,13 @@
                                             </div>
                                             <div class="d-flex justify-content-between mb-2">
                                                 <span>{{ __('messages.total_amount') }}:</span>
-                                                <span id="totalAmount">0.00 ৳</span>
+                                                <span id="totalAmount">0.00 {{ $generalSetting->currency_code }}</span>
                                             </div>
                                             <hr>
                                             <div class="d-flex justify-content-between fw-bold">
                                                 <span>{{ __('messages.final_total') }}:</span>
-                                                <span id="summaryGrandTotal">0.00 ৳</span>
+                                                <span id="summaryGrandTotal">0.00
+                                                    {{ $generalSetting->currency_code }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -441,13 +466,20 @@
                                 <div class="col-md-6 card border shadow-sm" style="padding: 20px;">
                                     <div class="row" style="padding: 0px!important; border:none!important;">
                                         <div class="col-md-12 mb-3">
+                                            <label for="barcode" class="form-label">{{ __('messages.barcode') }}
+                                            </label>
+                                            <input type="text" class="form-control" name="barcode" id="bar_code"
+                                                placeholder="{{ __('messages.scan_your_bar_code') }}">
+                                        </div>
+                                        <div class="col-md-12 mb-3">
                                             <label for="product_id" class="form-label">{{ __('messages.product') }} <span
                                                     class="text-danger">*</span></label>
                                             <select name="product_id" id="product_id" class="form-select select2">
                                                 <option value="">{{ __('messages.select_one') }}</option>
                                                 @foreach ($product as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}
-                                                        ({{ $item->product_code }})
+                                                    <option value="{{ $item->id }}">({{ $item->barcode }})
+                                                        {{ $item->name }}
+                                                        {{ $item->name_arabic }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -520,11 +552,14 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>{{ __('messages.serial_no') }}</th>
+                                        <th>{{ __('messages.product') }} {{ __('messages.code') }}</th>
                                         <th>{{ __('messages.product') }}</th>
                                         <th>{{ __('messages.size') }}</th>
                                         <th>{{ __('messages.color') }}</th>
                                         <th>{{ __('messages.quantity') }}</th>
                                         <th>{{ __('messages.unit') }}</th>
+                                        <th>{{ __('messages.selected_currency_price') }}</th>
+                                        <th>{{ __('messages.selected_currency_total_price') }}</th>
                                         <th>{{ __('messages.price') }}</th>
                                         <th>{{ __('messages.total_price') }}</th>
                                         <th>{{ __('messages.action') }}</th>
@@ -533,7 +568,7 @@
                                 <tbody></tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="6" class="text-end">{{ __('messages.total_price') }}:</th>
+                                        <th colspan="10" class="text-end">{{ __('messages.total_price') }}:</th>
                                         <th id="grandTotal">0.00</th>
                                         <th></th>
                                     </tr>
@@ -677,21 +712,79 @@
         });
     </script>
     <script>
+        let currency = "{{ $generalSetting->currency ?? '' }}";
+    </script>
+    <script>
+        $(document).on('change', '#currency_id', function() {
+
+            // selected rate set
+            let rate = $(this).find(':selected').data('rate') || '';
+            $('#rate').val(rate);
+
+            // make currency select readonly (disable)
+            // $(this).prop('disabled', true);
+        });
+    </script>
+    <script>
+        // $('#product_id').on('change', function() {
+
+        //     let productId = $(this).val();
+
+        //     if (productId) {
+        //         $.ajax({
+        //             url: "{{ route('getProductData') }}", // এই route টা তৈরি করতে হবে
+        //             type: "GET",
+        //             data: {
+        //                 id: productId
+        //             },
+        //             success: function(res) {
+        //                 if (res) {
+        //                     $('#price').val(res.purchase_price); // purchase_price সেট করো
+        //                     $('#unit_label').text('(' + res.unit + ')'); // unit দেখাও
+        //                 }
+        //             }
+        //         });
+        //     } else {
+        //         $('#price').val('');
+        //         $('#unit_label').text('');
+        //     }
+        // });
+        $('#rate').on('input', function() {
+            if ($('#product_id').val()) {
+                $('#product_id').trigger('change');
+            }
+        });
         $('#product_id').on('change', function() {
+
+            let currency = $('#currency_id').val();
+            let currencyRate = parseFloat($('#rate').val()) || 0;
+
+            if (!currency) {
+                alert("Please select a currency first!");
+                $('#product_id').val(''); // product unselect করে দিচ্ছি
+                return;
+            }
 
             let productId = $(this).val();
 
             if (productId) {
                 $.ajax({
-                    url: "{{ route('getProductData') }}", // এই route টা তৈরি করতে হবে
+                    url: "{{ route('getProductData') }}",
                     type: "GET",
                     data: {
                         id: productId
                     },
                     success: function(res) {
                         if (res) {
-                            $('#price').val(res.purchase_price); // purchase_price সেট করো
-                            $('#unit_label').text('(' + res.unit + ')'); // unit দেখাও
+
+                            // purchase price (original price)
+                            let original_price = parseFloat(res.purchase_price) || 0;
+
+                            // Convert price = original × currencyRate
+                            let convertedPrice = original_price / currencyRate;
+
+                            $('#price').val(convertedPrice.toFixed(2)); // converted price
+                            $('#unit_label').text('(' + res.unit + ')');
                         }
                     }
                 });
@@ -738,6 +831,33 @@
                         '<option value="">{{ __('messages.select_one') }}</option>');
                     $('#supplier_id').trigger('change');
 
+                }
+            });
+            $('#bar_code').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key pressed
+                    e.preventDefault();
+                    let barcode = $(this).val().trim();
+                    if (!barcode) return;
+
+                    $.ajax({
+                        url: '/admin/get-product-by-barcode/' + barcode,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.success) {
+                                // Product auto select
+                                $('#product_id').val(res.product.id).trigger('change');
+
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Product not found!',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
                 }
             });
             $('#supplier_id').on('change', function() {
@@ -882,35 +1002,228 @@
         });
     </script>
     <script>
+        // let cart = [];
+        // let payments = [];
+        // let currentSupplierId = null;
+        // let currentBranchId = "{{ session('branch_id') ?? '' }}";
+        // let currentPurchaseDate = null;
+        // let currentTransporationCost = null;
+        // $('#addToCart').on('click', function() {
+        //     let productText = $('#product_id option:selected').text();
+        //     let productId = $('#product_id').val();
+        //     let sizeId = $('#size_id').val();
+        //     let sizeText = sizeId ? $('#size_id option:selected').text() : '';
+        //     let colorId = $('#color_id').val();
+        //     let colorText = colorId ? $('#color_id option:selected').text() : '';
+
+        //     let price = parseFloat($('#price').val());
+        //     let qtyText = $('#unit_label').text();
+        //     let qty = parseFloat($('#qty').val());
+        //     let purchaseDate = $('#purchase_date').val();
+        //     let total = price * qty;
+        //     let supplierId = $('#supplier_id').val(); // supplier select field
+        //     let bracnId = $('#branch_id').val(); // supplier select field
+        //     let transporationCost = parseFloat($('#transporation_cost').val());
+        //     let missingFields = [];
+        //     if (!purchaseDate) missingFields.push('Purchase Date');
+        //     if (!supplierId) missingFields.push('Supplier');
+        //     if (!productId) missingFields.push('Product');
+        //     if (!price) missingFields.push('Price');
+        //     if (!qty) missingFields.push('Quantity');
+
+
+        //     if (missingFields.length > 0) {
+        //         Swal.fire({
+        //             icon: 'warning',
+        //             title: 'Missing Fields',
+        //             html: 'Please fill out: <b>' + missingFields.join(', ') + '</b>',
+        //             confirmButtonText: 'OK'
+        //         });
+        //         return; // Stop execution if fields are missing
+        //     }
+
+        //     // Check if supplier changed
+        //     if (currentSupplierId && currentSupplierId != supplierId) {
+
+        //         cart = []; // clear previous cart if needed
+        //     }
+        //     currentSupplierId = supplierId;
+        //     currentBranchId = bracnId;
+        //     currentPurchaseDate = purchaseDate;
+        //     currentTransporationCost = transporationCost;
+        //     // Push product to cart
+        //     cart.push({
+        //         qtyText,
+        //         productId,
+        //         productText,
+        //         sizeId,
+        //         sizeText,
+        //         colorId,
+        //         colorText,
+        //         price,
+        //         qty,
+        //         total,
+        //         supplierId,
+
+        //     });
+
+
+        //     renderCartSummary();
+        //     renderCart();
+
+
+        //     $('#product_id').val('').trigger('change');
+        //     $('#size_id').val('');
+        //     $('#color_id').val('');
+        //     $('#price').val('');
+        //     $('#qty').val('');
+        //     $('#unit_label').text('');
+
+        //     // ✅ Optional: focus back to product dropdown for next entry
+        //     // $('#product_id').focus();
+        // });
+
+        // function renderCartSummary() {
+        //     let totalProducts = cart.length;
+        //     let totalQty = 0;
+        //     let totalAmount = 0;
+
+        //     // ইউনিট অনুযায়ী quantity হিসাব
+        //     let unitSummary = {};
+
+        //     cart.forEach(item => {
+        //         totalQty += item.qty;
+        //         totalAmount += item.total;
+
+        //         // ইউনিট অনুযায়ী quantity গ্রুপ করে রাখছে
+        //         if (!unitSummary[item.qtyText]) {
+        //             unitSummary[item.qtyText] = 0;
+        //         }
+        //         unitSummary[item.qtyText] += item.qty;
+        //     });
+
+        //     // ইউনিট অনুযায়ী পরিমাণ দেখানো (যেমন: 10 লিটার, 5 কেজি)
+        //     // let qtyDisplay = Object.entries(unitSummary)
+        //     //     .map(([unit, qty]) => `${qty} ${unit}`)
+        //     //     .join(', ');
+        //     let qtyDisplay = Object.values(unitSummary)
+        //         .reduce((sum, qty) => sum + qty, 0);
+
+
+        //     $('#totalProducts').text(totalProducts);
+        //     $('#totalQty').text(qtyDisplay || '0');
+        //     $('#totalAmount').text(totalAmount.toFixed(2) + `${currency}`);
+        //     $('#summaryGrandTotal').text(totalAmount.toFixed(2) + `${currency}`);
+
+
+        //     if ($('#paymentSection').is(':visible')) {
+        //         window.cartTotal = totalAmount; // update global cartTotal
+        //         $('#cartTotalDisplay').text(totalAmount.toFixed(2));
+        //         updateRemainingBalance();
+        //     }
+        // }
+
+        // function renderCart() {
+        //     let tbody = $('#cartTable tbody');
+        //     tbody.empty();
+        //     let totalProducts = cart.length;
+        //     let totalQty = 0;
+        //     let cartTotal = 0;
+        //     cart.forEach((item, index) => {
+        //         cartTotal += item.total;
+        //         totalQty += item.qty;
+        //         tbody.append(`
+    //     <tr>
+    //         <td>${index + 1}</td>
+    //         <td>${item.productText}</td>
+    //         <td>${item.sizeText}</td>
+    //         <td>${item.colorText}</td>
+    //         <td>${item.qty} </td>
+    //         <td>${item.qtyText} </td>
+    //         <td>${item.price} ${currency}</td>
+    //         <td>${item.total.toFixed(2)} ${currency}</td>
+    //         <td><button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button></td>
+    //     </tr>
+    // `);
+        //     });
+        //     $('#grandTotal').text(cartTotal.toFixed(2) + ` ${currency}`);
+
+        //     window.cartTotal = cartTotal;
+
+        // }
+
+        // // Remove from cart
+        // function removeFromCart(index) {
+        //     // Remove product from cart
+        //     let removedItem = cart.splice(index, 1)[0];
+
+        //     if (cart.length === 0) {
+        //         currentSupplierId = null;
+        //         currentBranchId = null;
+        //         currentPurchaseDate = null;
+        //         currentTransporationCost = null;
+        //     }
+        //     renderCart();
+        //     renderCartSummary();
+        // }
+
         let cart = [];
         let payments = [];
         let currentSupplierId = null;
         let currentBranchId = "{{ session('branch_id') ?? '' }}";
         let currentPurchaseDate = null;
         let currentTransporationCost = null;
+
+        // General currency from backend
+        let generalCurrencyRate = {{ $generalSetting->currency_rate ?? 1 }};
+        let generalCurrencyCode = "{{ $generalSetting->currency_code ?? 'OMR' }}";
+
         $('#addToCart').on('click', function() {
-            let productText = $('#product_id option:selected').text();
+            let fullText = $('#product_id option:selected').text();
+            let productCode = fullText.split(')')[0].replace('(', '');
+            let productText = fullText.split(')')[1].trim();
+            // let productText = $('#product_id option:selected').text();
             let productId = $('#product_id').val();
             let sizeId = $('#size_id').val();
             let sizeText = sizeId ? $('#size_id option:selected').text() : '';
             let colorId = $('#color_id').val();
             let colorText = colorId ? $('#color_id option:selected').text() : '';
 
-            let price = parseFloat($('#price').val());
+            let priceBDT = parseFloat($('#price').val()) || 0; // Already converted to selected currency if needed
             let qtyText = $('#unit_label').text();
-            let qty = parseFloat($('#qty').val());
+            let qty = parseFloat($('#qty').val()) || 0;
             let purchaseDate = $('#purchase_date').val();
-            let total = price * qty;
-            let supplierId = $('#supplier_id').val(); // supplier select field
-            let bracnId = $('#branch_id').val(); // supplier select field
-            let transporationCost = parseFloat($('#transporation_cost').val());
+            let supplierId = $('#supplier_id').val();
+            let branchId = $('#branch_id').val();
+            let transporationCost = parseFloat($('#transporation_cost').val()) || 0;
+
+            // Selected currency
+            let selectedCurrencyRate = parseFloat($('#rate').val()) || 1;
+
+            let selectedCurrencyCode = $('#currency_id option:selected').text() || '';
+
+            // Price conversions
+            // Selected Currency Price → #price field e already converted ase
+            let priceInSelectedCurrency = priceBDT;
+            let totalInSelectedCurrency = priceInSelectedCurrency * qty;
+
+            // General Currency Price → BDT price / general currency rate
+            let priceInGeneralCurrency = priceBDT * selectedCurrencyRate;
+
+            let totalInGeneralCurrency = priceInGeneralCurrency * qty;
+
+            priceInSelectedCurrency = parseFloat(priceInSelectedCurrency.toFixed(2));
+            totalInSelectedCurrency = parseFloat(totalInSelectedCurrency.toFixed(2));
+            priceInGeneralCurrency = parseFloat(priceInGeneralCurrency.toFixed(2));
+            totalInGeneralCurrency = parseFloat(totalInGeneralCurrency.toFixed(2));
+
+            // Missing fields validation
             let missingFields = [];
             if (!purchaseDate) missingFields.push('Purchase Date');
             if (!supplierId) missingFields.push('Supplier');
             if (!productId) missingFields.push('Product');
-            if (!price) missingFields.push('Price');
+            if (!priceBDT) missingFields.push('Price');
             if (!qty) missingFields.push('Quantity');
-
 
             if (missingFields.length > 0) {
                 Swal.fire({
@@ -919,20 +1232,22 @@
                     html: 'Please fill out: <b>' + missingFields.join(', ') + '</b>',
                     confirmButtonText: 'OK'
                 });
-                return; // Stop execution if fields are missing
+                return;
             }
 
-            // Check if supplier changed
+            // Clear cart if supplier changed
             if (currentSupplierId && currentSupplierId != supplierId) {
-
-                cart = []; // clear previous cart if needed
+                cart = [];
             }
+
             currentSupplierId = supplierId;
-            currentBranchId = bracnId;
+            currentBranchId = branchId;
             currentPurchaseDate = purchaseDate;
             currentTransporationCost = transporationCost;
-            // Push product to cart
+
+            // Push to cart
             cart.push({
+                productCode,
                 qtyText,
                 productId,
                 productText,
@@ -940,65 +1255,53 @@
                 sizeText,
                 colorId,
                 colorText,
-                price,
+                priceInSelectedCurrency,
+                totalInSelectedCurrency,
+                priceInGeneralCurrency,
+                totalInGeneralCurrency,
                 qty,
-                total,
                 supplierId,
+                selectedCurrencyCode
 
             });
-
-
+            if (cart.length === 0) {
+                $('#currency_id').prop('disabled', false); // enable again
+            } else {
+                $('#currency_id').prop('disabled', true);
+            }
             renderCartSummary();
             renderCart();
 
-
+            // Reset inputs
             $('#product_id').val('').trigger('change');
             $('#size_id').val('');
             $('#color_id').val('');
             $('#price').val('');
             $('#qty').val('');
             $('#unit_label').text('');
-
-            // ✅ Optional: focus back to product dropdown for next entry
-            // $('#product_id').focus();
         });
 
         function renderCartSummary() {
             let totalProducts = cart.length;
             let totalQty = 0;
-            let totalAmount = 0;
-
-            // ইউনিট অনুযায়ী quantity হিসাব
-            let unitSummary = {};
+            let totalSelectedCurrency = 0;
+            let totalGeneralCurrency = 0;
 
             cart.forEach(item => {
                 totalQty += item.qty;
-                totalAmount += item.total;
-
-                // ইউনিট অনুযায়ী quantity গ্রুপ করে রাখছে
-                if (!unitSummary[item.qtyText]) {
-                    unitSummary[item.qtyText] = 0;
-                }
-                unitSummary[item.qtyText] += item.qty;
+                totalSelectedCurrency += item.totalInSelectedCurrency;
+                totalGeneralCurrency += item.totalInGeneralCurrency;
             });
 
-            // ইউনিট অনুযায়ী পরিমাণ দেখানো (যেমন: 10 লিটার, 5 কেজি)
-            // let qtyDisplay = Object.entries(unitSummary)
-            //     .map(([unit, qty]) => `${qty} ${unit}`)
-            //     .join(', ');
-            let qtyDisplay = Object.values(unitSummary)
-                .reduce((sum, qty) => sum + qty, 0);
-
-
             $('#totalProducts').text(totalProducts);
-            $('#totalQty').text(qtyDisplay || '0');
-            $('#totalAmount').text(totalAmount.toFixed(2) + ' ৳');
-            $('#summaryGrandTotal').text(totalAmount.toFixed(2) + ' ৳');
-
+            $('#totalQty').text(totalQty || '0');
+            $('#totalAmount').text(totalGeneralCurrency.toFixed(2) +
+                ` ${generalCurrencyCode}`);
+            $('#summaryGrandTotal').text(totalGeneralCurrency.toFixed(2) + ` ${generalCurrencyCode}`);
 
             if ($('#paymentSection').is(':visible')) {
-                window.cartTotal = totalAmount; // update global cartTotal
-                $('#cartTotalDisplay').text(totalAmount.toFixed(2));
+                window.cartTotal = totalSelectedCurrency;
+                $('#cartTotalDisplay').text(totalSelectedCurrency.toFixed(2));
                 updateRemainingBalance();
             }
         }
@@ -1006,36 +1309,36 @@
         function renderCart() {
             let tbody = $('#cartTable tbody');
             tbody.empty();
-            let totalProducts = cart.length;
-            let totalQty = 0;
-            let cartTotal = 0;
+
             cart.forEach((item, index) => {
-                cartTotal += item.total;
-                totalQty += item.qty;
                 tbody.append(`
             <tr>
                 <td>${index + 1}</td>
+                <td>${item.productCode}</td>
                 <td>${item.productText}</td>
                 <td>${item.sizeText}</td>
                 <td>${item.colorText}</td>
-                <td>${item.qty} </td>
-                <td>${item.qtyText} </td>
-                <td>${item.price} ৳</td>
-                <td>${item.total.toFixed(2)} ৳</td>
+                <td>${item.qty}</td>
+                <td>${item.qtyText}</td>
+                <!-- Selected Currency Price -->
+                <td>${item.priceInSelectedCurrency.toFixed(2)} ${item.selectedCurrencyCode}</td>
+                <td>${item.totalInSelectedCurrency.toFixed(2)} ${item.selectedCurrencyCode}</td>
+                <!-- General Currency Price -->
+                <td>${item.priceInGeneralCurrency.toFixed(2)} ${generalCurrencyCode}</td>
+                <td>${item.totalInGeneralCurrency.toFixed(2)} ${generalCurrencyCode}</td>
                 <td><button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button></td>
             </tr>
         `);
             });
-            $('#grandTotal').text(cartTotal.toFixed(2) + ' ৳');
 
-            window.cartTotal = cartTotal;
+            let cartTotalSelected = cart.reduce((sum, item) => sum + item.totalInGeneralCurrency, 0);
 
+            $('#grandTotal').text(cartTotalSelected.toFixed(2) + ` ${generalCurrencyCode}`);
+            window.cartTotal = cartTotalSelected;
         }
 
-        // Remove from cart
         function removeFromCart(index) {
-            // Remove product from cart
-            let removedItem = cart.splice(index, 1)[0];
+            cart.splice(index, 1);
 
             if (cart.length === 0) {
                 currentSupplierId = null;
@@ -1043,9 +1346,15 @@
                 currentPurchaseDate = null;
                 currentTransporationCost = null;
             }
+            if (cart.length === 0) {
+                $('#currency_id').prop('disabled', false); // enable again
+            } else {
+                $('#currency_id').prop('disabled', true);
+            }
             renderCart();
             renderCartSummary();
         }
+
 
 
         // Show payment form
@@ -1156,6 +1465,7 @@
         }
         // Complete Payment
         $('#completePaymentBtn').on('click', function() {
+            let selectedCurrencyRate = parseFloat($('#rate').val()) || 1;
             // Calculate total paid and remaining
             let totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
             let remaining = cartTotal - totalPaid;
@@ -1206,6 +1516,8 @@
                 purchaseDate: currentPurchaseDate, // currentSupplierId pathano holo
                 note: $('#note').val(), // <-- Note field
                 terms_condition: $('#terms_condition').val(),
+                currency_id: $('#currency_id').val(), // selected currency id
+                currency_rate: $('#rate').val(),
                 _token: "{{ csrf_token() }}"
             };
 
@@ -1241,6 +1553,7 @@
 
         });
         $('#saveWithoutPayment').on('click', function() {
+            let selectedCurrencyRate = parseFloat($('#rate').val()) || 1;
             // Calculate total paid and remaining
             let totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
             let remaining = cartTotal - totalPaid;
@@ -1288,6 +1601,8 @@
                 purchaseDate: currentPurchaseDate,
                 note: $('#note').val(), // <-- Note field
                 terms_condition: $('#terms_condition').val(),
+                currency_id: $('#currency_id').val(), // selected currency id
+                currency_rate: $('#rate').val(),
                 _token: "{{ csrf_token() }}"
             };
             // Send Ajax request to purchase.store route
