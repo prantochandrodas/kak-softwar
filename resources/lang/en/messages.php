@@ -254,7 +254,14 @@ return [
     'selected_currency_total_price' => 'Selected Currency Total Price',
     'selected_currency_total_amount' => 'Selected Currency Total Amount',
 
-
+    // profit report
+    'profit_report' => 'Profit Report',
+    'total_sale_quantity' => 'Total Sale Quantity',
+    'per_unit' => 'Per Unit',
+    'sale_amount' => 'Sale Amount',
+    'purchase_amount' => 'Purchase Amount',
+    'net_profit' => 'Net Profit',
+    'profit' => 'Profit',
     // sale
     'customer' => 'Customer',
     'new_customer' => 'New Customer',

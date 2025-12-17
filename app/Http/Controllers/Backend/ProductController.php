@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\DataTables;
+use App\Imports\ProductsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -326,5 +328,35 @@ class ProductController extends Controller
     {
         $data = SubCategory::where('category_id', $id)->where('status', 1)->get();
         return response()->json(['data' => $data]);
+    }
+
+    public function importProducts(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        try {
+            Excel::import(new ProductsImport, $request->file('file'));
+
+            return back()->with('success', 'Products imported successfully.');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+            $messages = [];
+
+            foreach ($failures as $failure) {
+                $messages[] = implode(', ', $failure->errors());
+            }
+
+            // Send SweetAlert message
+            return back()->with('error', implode('<br>', $messages));
+        }
+    }
+
+    public function downloadSample()
+    {
+        $filePath = public_path('uploads/product-excel.xlsx'); // আপনি public/sample ফোল্ডারে এক্সেল রাখতে পারেন
+
+        return response()->download($filePath, 'products-sample.xlsx');
     }
 }

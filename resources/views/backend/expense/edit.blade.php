@@ -456,7 +456,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="name" class="form-label"> {{ __('messages.expense_person') }}
-                                            <span class="text-danger">*</span></label>
+                                        </label>
                                         <input type="text" name="name" id="name"
                                             class="form-control @error('name') is-invalid @enderror"
                                             placeholder=" {{ __('messages.expense_person') }}"

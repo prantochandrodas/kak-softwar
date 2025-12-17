@@ -26,6 +26,72 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ReportController extends Controller
 {
 
+    public function profitReport(Request $request)
+    {
+        $from_date = $request->from_date ?? now()->startOfMonth()->toDateString();
+        $to_date = $request->to_date ?? now()->endOfMonth()->toDateString();
+        $product_id = $request->product_id ?? null;
+
+        $products = Product::where('status', 1)->get();
+
+        $salesQuery = \App\Models\SaleDetails::with(['sale', 'product'])
+            ->whereHas('sale', function ($q) use ($from_date, $to_date) {
+                $q->whereBetween('date', [$from_date, $to_date]);
+            });
+
+        if ($product_id) {
+            $salesQuery->where('product_id', $product_id);
+        }
+
+        $sales = $salesQuery->get();
+
+        $reportData = [];
+        $total_purchase_cost = 0;
+        $total_sale_amount = 0;
+        $total_profit = 0;
+
+        foreach ($products as $product) {
+            $productSales = $sales->where('product_id', $product->id);
+
+            if ($productSales->count() > 0) {
+                $totalQty = $productSales->sum('quantity'); // মোট sale quantity
+                $purchaseCost = $totalQty * $product->purchase_price;
+                $saleAmount = $totalQty * $product->sale_price;
+                $profit = $saleAmount - $purchaseCost;
+
+                $reportData[] = [
+                    'product_name' => $product->name,
+                    'product_unit' => $product->unit->name,
+                    'quantity' => $totalQty,
+                    'purchase_price' => $product->purchase_price,
+                    'sale_price' => $product->sale_price,
+                    'purchase_cost' => $purchaseCost,
+                    'sale_amount' => $saleAmount,
+                    'profit' => $profit,
+                ];
+
+                $total_purchase_cost += $purchaseCost;
+                $total_sale_amount += $saleAmount;
+                $total_profit += $profit;
+            }
+        }
+
+        $total_expense = \App\Models\Expense::whereBetween('date', [$from_date, $to_date])->sum('amount');
+        $net_profit = $total_profit - $total_expense;
+
+        return view('backend.report.profit_report', compact(
+            'products',
+            'product_id',
+            'from_date',
+            'to_date',
+            'reportData',
+            'total_purchase_cost',
+            'total_sale_amount',
+            'total_profit',
+            'total_expense',
+            'net_profit'
+        ));
+    }
     public function fundHistoryReport(Request $request)
     {
         if (!check_access("fund-history-report")) {
@@ -570,6 +636,7 @@ class ReportController extends Controller
             'summary'
         ));
     }
+
     public function stock_report(Request $request)
     {
         if (!check_access("stock-report")) {
@@ -722,6 +789,114 @@ class ReportController extends Controller
             'products' => $products,
             'filterProducts' => $filterProducts,
             'reportData' => $reportData,
+        ]);
+    }
+    public function product_stock(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $barcode = $request->barcode ?? null;
+            if ($request->product_id) {
+                $product_id = $request->product_id ?? null;
+            } else {
+
+                if ($barcode) {
+                    $product = Product::where('barcode', $barcode)->first();
+                    $product_id = $product->id ?? null;
+                } else {
+                    $product_id =  null;
+                }
+            }
+
+
+
+            $user = Auth::user();
+            $branchIdFromRequest = $request->branch_id ?? null;
+
+            if ($user->roles->pluck('name')->contains('Super Admin') && session('branch_id') == null) {
+
+                if ($branchIdFromRequest) {
+                    $productVariants = VariantStocks::with('variant')
+                        ->when($product_id, fn($q) => $q->where('product_id', $product_id))
+                        ->where('branch_id', $branchIdFromRequest)
+                        ->get();
+                } else {
+                    $productVariants = VariantStocks::with('variant')
+                        ->when($product_id, fn($q) => $q->where('product_id', $product_id))
+                        ->get();
+                }
+            } else {
+                $productVariants = VariantStocks::with('variant')
+                    ->when($product_id, fn($q) => $q->where('product_id', $product_id))
+                    ->where('branch_id', session('branch_id'))
+                    ->get();
+            }
+
+            $reportData = [];
+
+            foreach ($productVariants as $item) {
+
+                $pid = $item->product_id;
+                $sid = $item->variant->size_id ?? null;
+                $cid = $item->variant->color_id ?? null;
+                $bid = $item->branch_id;
+                $vid = $item->variant_id;
+
+                $currentPurchase = \DB::table('purchase_details')
+                    ->join('purchases', 'purchase_details.purchase_id', '=', 'purchases.id')
+                    ->where('purchase_details.product_id', $pid)
+                    ->where('purchase_details.size_id', $sid)
+                    ->where('purchase_details.color_id', $cid)
+                    ->where('purchase_details.branch_id', $bid)
+                    ->sum('purchase_details.quantity');
+
+                $currentStockRecived = \DB::table('transfer_details')
+                    ->join('transfers', 'transfer_details.transfer_id', '=', 'transfers.id')
+                    ->where('transfer_details.product_id', $pid)
+                    ->where('transfer_details.varient_id', $vid)
+                    ->where('transfers.to_branch_id', $bid)
+                    ->where('transfers.status', 1)
+                    ->sum('transfer_details.quantity');
+
+                $currentStockTransfer = \DB::table('transfer_details')
+                    ->join('transfers', 'transfer_details.transfer_id', '=', 'transfers.id')
+                    ->where('transfer_details.product_id', $pid)
+                    ->where('transfer_details.varient_id', $vid)
+                    ->where('transfers.form_branch_id', $bid)
+                    ->where('transfers.status', 1)
+                    ->sum('transfer_details.quantity');
+
+                $currentSale = \DB::table('sale_details')
+                    ->join('sales', 'sale_details.sale_id', '=', 'sales.id')
+                    ->where('sale_details.product_id', $pid)
+                    ->where('sale_details.variant_id', $vid)
+                    ->where('sale_details.branch_id', $bid)
+                    ->sum('sale_details.quantity');
+
+                $currentStock = $currentPurchase + $currentStockRecived - $currentStockTransfer - $currentSale;
+
+                $reportData[] = [
+                    'product' => $item->product->name,
+                    'product_code' => $item->product->barcode,
+                    'size' => $item->variant->size->name ?? '',
+                    'color' => $item->variant->color->color_name ?? '',
+                    'branch' => $item->branch->name ?? '',
+                    'purchase' => $currentPurchase,
+                    'sale' => $currentSale,
+                    'received' => $currentStockRecived,
+                    'transfer' => $currentStockTransfer,
+                    'current_stock' => $currentStock,
+                ];
+            }
+
+            return response()->json(['data' => $reportData]);
+        }
+
+        // === Normal page load ===
+
+        return view('backend.dashboard', [
+            'products' => Product::where('status', 1)->get(),
+            'reportData' => []
         ]);
     }
 

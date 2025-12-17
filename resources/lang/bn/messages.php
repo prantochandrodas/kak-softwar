@@ -361,6 +361,14 @@ return [
 
     'scan_your_bar_code' => 'আপনার বারকোড স্ক্যান করুন',
 
+    'profit_report' => 'লাভের রিপোর্ট',
+    'total_sale_quantity' => 'মোট বিক্রয় পরিমাণ',
+    'per_unit' => 'প্রতি ইউনিট',
+    'sale_amount' => 'বিক্রয় মূল্য',
+    'purchase_amount' => 'ক্রয় মূল্য',
+    'net_profit' => 'মোট লাভ',
+    'profit' => 'লাভ',
+
 
 
     'thank_you_shopping' => 'ধন্যবাদ! কেনাকাটার জন্য ধন্যবাদ',

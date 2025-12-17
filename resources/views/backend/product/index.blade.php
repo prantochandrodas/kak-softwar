@@ -121,6 +121,7 @@
                             <button type="button" id="resetFilter" class="btn btn-sm btn-secondary">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i> {{ __('messages.reset') }}
                             </button>
+
                         </div>
 
                     </form>
@@ -131,6 +132,16 @@
                 <a href="{{ route('product.create') }}"
                     class="btn btn-sm fw-bold btn-success">{{ __('messages.create_product') }}</a>
                 <!--end::Primary button-->
+
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+                    Import Products
+                </button>
+
+                <div class="mt-2">
+                    <a href="{{ route('products.downloadSample') }}" class="btn btn-sm btn-info" id="downloadSample">
+                        <i class="bi bi-download me-1"></i> Download Sample Excel
+                    </a>
+                </div>
             </div>
             <div class="table-responsive ">
                 <table id="featuredProjectTitleHeading" class="display " style="width:100%">
@@ -139,7 +150,7 @@
                             <th>{{ __('messages.serial_no') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.barcode') }}</th>
                             <th>{{ __('messages.product') }} {{ __('messages.name') }}</th>
-                            <th>{{ __('messages.product') }} {{ __('messages.product_code') }}</th>
+                            <th> {{ __('messages.product_code') }}</th>
                             {{-- <th> {{ __('messages.shit_number') }}</th> --}}
 
                             <th>{{ __('messages.product') }} {{ __('messages.category') }}</th>
@@ -159,6 +170,29 @@
     </div>
 </div>
 
+<!-- Import Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Products</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="file" class="form-label">Choose Excel/CSV file</label>
+                    <input type="file" class="form-control" name="file" id="file" accept=".xlsx,.csv"
+                        required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="dataEditModal" tabindex="-1" aria-labelledby="dataEditModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -182,7 +216,14 @@
 <script src="{{ asset('assets/backend/js/jquery-3.6.0.min.js') }}"></script>
 <script src="{{ asset('assets/backend/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/backend/js/dataTables.bootstrap5.min.js') }}"></script>
-
+<script>
+    $('#downloadSample').on('click', function(e) {
+        showLoading();
+        setTimeout(function() {
+            hideLoading();
+        }, 500);
+    });
+</script>
 <script>
     var table;
     $(document).ready(function() {

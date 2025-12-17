@@ -207,6 +207,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/product/toggle-status', [ProductController::class, 'toggleStatus'])->name('product.toggleStatus');
         Route::get('product/show/{id}', [ProductController::class, 'show'])->name('product.show');
         Route::get('get-subcategory/{id}', [ProductController::class, 'getSubcategory']);
+        Route::post('/products/import', [ProductController::class, 'importProducts'])->name('products.import');
+        Route::get('products/download-sample', [ProductController::class, 'downloadSample'])->name('products.downloadSample');
+
 
 
         Route::get('purchase-form', [PurchaseController::class, 'purchase_form'])->name('purchase.form');
@@ -387,6 +390,9 @@ Route::prefix('admin')->group(function () {
         Route::put('sub-category/update/{id}', [SubCategoryController::class, 'update'])->name('sub-category.update');
         Route::post('/sub-category/toggle-status', [SubCategoryController::class, 'toggleStatus'])->name('sub-category.toggleStatus');
 
+        Route::match(['get', 'post'], 'product-stock-report', [ReportController::class, 'product_stock'])->name('product-stock-report');
+
+        Route::match(['get', 'post'], 'profit-report', [ReportController::class, 'profitReport'])->name('profit-report');
 
         Route::match(['get', 'post'], 'stock-report', [ReportController::class, 'stock_report'])->name('stock-report');
         Route::match(['get', 'post'], 'purchase-report', [ReportController::class, 'purchase_report'])->name('purchase-report');

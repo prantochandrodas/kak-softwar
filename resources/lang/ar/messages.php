@@ -357,6 +357,14 @@ return [
     'currency' => 'العملة',
     'scan_your_bar_code' => 'امسح الباركود الخاص بك',
 
+    'profit_report' => 'تقرير الربح',
+    'total_sale_quantity' => 'إجمالي كمية المبيعات',
+    'per_unit' => 'لكل وحدة',
+    'sale_amount' => 'مبلغ البيع',
+    'purchase_amount' => 'مبلغ الشراء',
+    'net_profit' => 'صافي الربح',
+    'profit' => 'الربح',
+
 
 
     'purchase_report' => 'تقرير الشراء',

@@ -777,7 +777,7 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
 
                 @if (check_permission(['stock-report', 'purchase-report', 'sale-report', 'customer-report', 'fund-history-report']))
                     <div data-kt-menu-trigger="click"
-                        class="menu-item menu-accordion {{ request()->routeIs('stock-report') || request()->routeIs('fund-history-report') || request()->routeIs('customer-report') || request()->routeIs('purchase-report') || request()->routeIs('sale-report') ? ' show' : '' }}">
+                        class="menu-item menu-accordion {{ request()->routeIs('stock-report') || request()->routeIs('profit-report') || request()->routeIs('fund-history-report') || request()->routeIs('customer-report') || request()->routeIs('purchase-report') || request()->routeIs('sale-report') ? ' show' : '' }}">
                         <!--begin:Menu link-->
                         <span class="menu-link">
                             <span class="menu-icon">
@@ -836,6 +836,20 @@ if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_stat
                                 </div>
                             </div>
                         @endif
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{ request()->routeIs('profit-report') ? ' active' : '' }}"
+                                    href="{{ route('profit-report') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">{{ __('messages.profit_report') }}
+                                    </span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                        </div>
                         @if (check_permission(['customer-report']))
                             <div class="menu-sub menu-sub-accordion">
                                 <div class="menu-item">
